@@ -85,7 +85,7 @@ exports.update = function(db, collectionName, selector, postData, callback) {
          callback(err);
       }
       else {
-         collection.findAndModify(selector, {$set: postData}, {}, function(err, object) {
+         collection.findAndModify(selector, [['key','asc']], {$set: postData}, {}, function(err, object) {
             if (err) callback(err)
             else callback(err, object);
          });

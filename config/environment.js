@@ -1,4 +1,8 @@
 {
+   "app": {
+      "hostname": "10.0.1.243", 
+      "port": "3000"
+   },
    "staticArea": "public",
    "controllerArea": "controller",
    "data": {

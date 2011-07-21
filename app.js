@@ -14,8 +14,8 @@ resource = require('./resource');
 var env = JSON.parse(fs.readFileSync('./config/environment.js', 'utf-8'));
 
 var opts = {
-   hostname: '10.0.1.243', 
-   port:3000, 
+   hostname: env.app.hostname,
+   port: env.app.port,
    view: {
       dir: env.view.area,
       ext: env.view.ext,
@@ -41,12 +41,6 @@ var db = new Db(env.data.db, new Server(env.data.host, env.data.port, {}));
 
 var router_data = [
    {
-      pattern: '/hello',
-      get: function(req, res) {
-         res.end('Hello World!');
-      }
-   },
-   {
       pattern: '/',
       get: function(req, res) {
          res.redirect('/main');
@@ -68,21 +62,6 @@ var router_data = [
       }
    },
    {
-      pattern: '/posts',
-      get: function(req, res) {
-         resource.getArray(db, 'posts', function(err, data) {
-            if (err) {
-               res.end('<h3>Collection Posts is not available</h3>');  
-            }
-            else {
-               var ctx = {};
-               ctx.posts = data;
-               res.render('posts', ctx);
-            }
-         })
-      }
-   },
-   {
       pattern: '/posts/add',
       get: function(req, res) {
          res.render('add_post', {});
@@ -93,7 +72,7 @@ var router_data = [
       get: function(req, res) {
          resource.find(db, 'posts', {'key': req.params.id}, function(err, data) {
             if (err) {
-               res.end(err.toString());
+               res.end(err.message);
             }
             else {
                res.render('edit_post', data);
@@ -101,45 +80,73 @@ var router_data = [
          });
       }
    },
-   {
-      pattern: '/posts',
-      post: function(req, res) {
-         var postData = qs.parse(req.postdata.toString());
-         resource.add(db, 'posts', postData, function(err, data) {
+   {  // resource list
+      pattern: '/resource/{name}',
+      get: function(req, res) {
+         resource.getArray(db, req.params.name, function(err, data) {
             if (err) {
-               res.end('<h3>Collection Posts is not available</h3>');  
+               res.end(err.message);
             }
             else {
-               res.redirect('/posts');
-            }
-         })         
-      }
-   },
-   {
-      pattern: '/posts/{id}',
-      put: function(req, res) {
-         var postData = JSON.parse(req.postdata.toString());
-         resource.update(db, 'posts', {'key': req.params.id}, postData, function(err, data) {
-            if (err) {
-               res.end(err.toString());
-            }
-            else {
-               res.redirect('/posts');
+               var ctx = {};
+               ctx.posts = data;
+               res.render(req.params.name, ctx);
             }
          })
       }
    },
-   {
-      pattern: '/posts/{id}',
-      delete: function(req, res) {
-         resource.remove(db, 'posts', req.params.id, function(err) {
+   {  // read resource
+      pattern: '/resource/{name}/{id}',
+      get: function(req, res) {
+         resource.find(db, req.params.name, {'key': req.params.id}, function(err, data) {
             if (err) {
-               res.end(err.toString());
+               res.end(err.message);
             }
             else {
-               resource.getArray(db, 'posts', function(err, data) {
+               res.render('read_post', data);
+            }
+         });
+      }
+   },   
+   {  // create resource
+      pattern: '/resource/{name}',
+      post: function(req, res) {
+         var postData = qs.parse(req.postdata.toString());
+         resource.add(db, req.params.name, postData, function(err, data) {
+            if (err) {
+               res.end(err.message);
+            }
+            else {
+               res.redirect(req.params.name);
+            }
+         })
+      }
+   },
+   {  // update resource
+      pattern: '/resource/{name}/{id}',
+      put: function(req, res) {
+         var postData = JSON.parse(req.postdata.toString());
+         resource.update(db, req.params.name, {'key': req.params.id}, postData, function(err, data) {
+            if (err) {
+               res.end(err.message);
+            }
+            else {
+               res.redirect(req.params.name);
+            }
+         })
+      }
+   },
+   {  // delete resource
+      pattern: '/resource/{name}/{id}',
+      delete: function(req, res) {
+         resource.remove(db, req.params.name, req.params.id, function(err) {
+            if (err) {
+               res.end(err.message);
+            }
+            else {
+               resource.getArray(db, req.params.name, function(err, data) {
                   if (err) {
-                     res.end('<h3>Collection Posts is not available</h3>');  
+                     res.end(err.message);  
                   }
                   else {
                      var ctx = {};
@@ -150,41 +157,7 @@ var router_data = [
             }
          })      
       }
-   },
-   {
-      pattern: '/view/{templatename}',
-      get: function(req, res) {
-         try {
-            res.render(req.params.templatename, data);
-         } catch (e) {
-            res.end(e.message);
-         }
-      }
-   },
-   {
-      pattern: '/{app},<name>,{template}',
-      get: function(req, res) {
-         try {
-            if (dust.cache[req.params.template]) {
-               resource.pageModel(db, req.params.app, req.params.name, function(data) {
-                  res.render(req.params.template, data);
-               });
-            }
-            else {
-               resource.createTemplate(req.params.template, opts.template, function(err) {
-                  if (err) {
-                     res.end(err);
-                  };
-                  resource.pageModel(db, req.params.app, req.params.name, function(data) {
-                     res.render(req.params.template, data);
-                  });
-               })
-            }
-         } catch (e) {
-            res.end(e.message);
-         }
-      }
-   },
+   },   
    {
       get: connect.static(env.staticArea)
    }

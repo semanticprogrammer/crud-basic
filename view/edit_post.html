@@ -29,7 +29,7 @@
             <label for="date">Date:</label>
             <input id="date" name="date" type="text" value="{.date}"/>
             <textarea name="content" rows="3" colums="20" max-length="140" wrap="soft">{.content}</textarea>       
-            <button onclick="updatePost('/posts/{.key}')" type="button">Save</button>
+            <button onclick="updatePost('/resource/posts/{.key}')" type="button">Save</button>
          </form>
       </div>
       {/content}

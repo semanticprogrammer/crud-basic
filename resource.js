@@ -107,36 +107,3 @@ exports.remove = function(db, collectionName, id, callback) {
       }
    })
 };
-
-//collection.insert({hello: 'world'}, {safe:true},
-//                    function(err, objects) {
-//    if (err) console.warn(err.message);
-//    if (err && err.message.indexOf('E11000 ') !== -1) {
-//      // this _id was already inserted in the database
-//    }
-//  });
-
-//collection.findAndModify( {query: {comment:'0'}, update : {"$inc":{"count":1}}, 'new': true}, function (doc) {
-//  console.log(doc)
-//})
-//
-//job = db.jobs.findAndModify( {sort:{priority:-1}, remove:true} );
-//
-//collection.findAndModify({hello: 'world'}, [['_id','asc']], {$set: {hi: 'there'}}, {},
-//                    function(err, object) {
-//    if (err) console.warn(err.message);
-//    else console.dir(object);  // undefined if no matching object exists.
-//  });
-//
-
-
-//  var collection = new mongodb.Collection(client, 'test_collection');
-//  collection.find({}, {limit:10}).toArray(function(err, docs) {
-//    console.dir(docs);
-//  });
-
-//         collection.find(function(err, cursor) {
-//            cursor.toArray(function(err, docs) {
-//               callback(err, docs);
-//            });
-//         });

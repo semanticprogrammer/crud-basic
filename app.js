@@ -48,7 +48,7 @@ var router_data = [
    {
       pattern: '/main',
       get: function(req, res) {
-         res.render('main', ctx);
+         res.render('main');
       }
    },
    {

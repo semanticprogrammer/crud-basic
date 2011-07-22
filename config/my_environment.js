@@ -1,12 +1,12 @@
 {
    "app": {
-      "hostname": "localhost", 
+      "hostname": "10.0.1.243", 
       "port": "3000"
    },
    "staticArea": "public",
    "controllerArea": "controller",
    "data": {
-      "host": "localhost",
+      "host": "10.0.0.11",
       "port": "27017",
       "db": "test"
    },

@@ -20,7 +20,7 @@
 {<content}
       <div class="border body">
          <div class="block">
-            <a href="/posts/add" class="border link button">Add Post</a>            
+            <a href="/resource/add/post" class="border link button">Add Post</a>            
          </div>
          <table>
             <thead>
@@ -36,7 +36,7 @@
             <col id="date"/>
             <col id="content"/>
             <tbody>
-               {#posts}
+               {#.}
                <tr>
                   <td>
                      {title}
@@ -48,13 +48,13 @@
                      {content}
                   </td>
                   <td>
-                     <a href="/posts/{key}/edit" class="link button">Edit</a>
+                     <a href="/resource/edit/post/key/{key}" class="link button">Edit</a>
                   </td>
                   <td>
-                     <a href="" onclick="removePost('/resource/posts/{key}')" class="link button">Delete</a>
+                     <a href="" onclick="removePost('/resource/post/{key}')" class="link button">Delete</a>
                   </td>
                </tr>
-               {/posts}
+               {/.}
             </tbody>
          </table>
       </div>

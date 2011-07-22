@@ -52,35 +52,34 @@ var router_data = [
       }
    },
    {
-      pattern: '/posts/add',
+      pattern: '/resource/add/{name}',
       get: function(req, res) {
-         res.render('add_post', {});
+         res.render(req.params.name + '_add');
       }
    },
    {
-      pattern: '/posts/{id}/edit',
+      pattern: '/resource/edit/{name}/{key}/{id}',
       get: function(req, res) {
-         resource.find(db, 'posts', {'key': req.params.id}, function(err, data) {
+         var selector = {}; selector[req.params.key] = req.params.id;
+         resource.find(db, req.params.name, selector, function(err, data) {
             if (err) {
                res.end(err.message);
             }
             else {
-               res.render('edit_post', data);
+               res.render(req.params.name + '_edit', data);
             }
          });
       }
    },
    {  // resource list
-      pattern: '/resource/{name}',
+      pattern: '/resource/list/{name}',
       get: function(req, res) {
          resource.getArray(db, req.params.name, function(err, data) {
             if (err) {
                res.end(err.message);
             }
             else {
-               var ctx = {};
-               ctx.posts = data;
-               res.render(req.params.name, ctx);
+               res.render(req.params.name + '_list', data);
             }
          })
       }
@@ -107,7 +106,7 @@ var router_data = [
                res.end(err.message);
             }
             else {
-               res.redirect(req.params.name);
+               res.redirect('/resource/list/' + req.params.name);
             }
          })
       }
@@ -121,7 +120,7 @@ var router_data = [
                res.end(err.message);
             }
             else {
-               res.redirect(req.params.name);
+               res.redirect('/resource/list/' + req.params.name);
             }
          })
       }
@@ -137,11 +136,6 @@ var router_data = [
                resource.getArray(db, req.params.name, function(err, data) {
                   if (err) {
                      res.end(err.message);  
-                  }
-                  else {
-                     var ctx = {};
-                     ctx.posts = data;
-                     res.render('main', ctx);
                   }
                })
             }

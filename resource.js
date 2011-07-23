@@ -71,7 +71,9 @@ exports.add = function(db, collectionName, postData, callback) {
          callback(err);
       }
       else {
-         collection.insert(postData, {safe:true}, function(err, object) {
+         collection.insert(postData, {
+            safe:true
+         }, function(err, object) {
             if (err) callback(err)
             else callback(err, object);
          });
@@ -85,7 +87,9 @@ exports.update = function(db, collectionName, selector, postData, callback) {
          callback(err);
       }
       else {
-         collection.findAndModify(selector, [['key','asc']], {$set: postData}, {}, function(err, object) {
+         collection.findAndModify(selector, [['key','asc']], {
+            $set: postData
+         }, {}, function(err, object) {
             if (err) callback(err)
             else callback(err, object);
          });
@@ -93,17 +97,28 @@ exports.update = function(db, collectionName, selector, postData, callback) {
    })
 };
 
-exports.remove = function(db, collectionName, id, callback) {
+exports.remove = function(db, collectionName, selector, callback) {
    db.collection(collectionName, function(err, collection) {
       if (err) {
          callback(err);
       }
       else {
-         collection.remove({
-            'key': id
-         }, function(err) {
+         collection.remove(selector, function(err) {
             callback(err);
          });
       }
    })
+};
+
+exports.rename = function(db, currentCollectionName, newCollectionName, callback) {
+   db.renameCollection(unescape(currentCollectionName), unescape(newCollectionName), 
+      function (err, output) {
+         if (err) {
+            callback(err);
+         }
+         else {
+            callback(err, output);
+         }
+      }
+   );
 };

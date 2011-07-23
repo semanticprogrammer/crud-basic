@@ -1,4 +1,4 @@
-require.paths.unshift('../../lib');
+//require.paths.unshift('../../lib');
 var 
 fs = require('fs'),
 qs = require('querystring'),
@@ -85,9 +85,10 @@ var router_data = [
       }
    },
    {  // read resource
-      pattern: '/resource/{name}/{id}',
+      pattern: '/resource/{name}/{key}/{id}',
       get: function(req, res) {
-         resource.find(db, req.params.name, {'key': req.params.id}, function(err, data) {
+         var selector = {}; selector[req.params.key] = req.params.id;
+         resource.find(db, req.params.name, selector, function(err, data) {
             if (err) {
                res.end(err.message);
             }
@@ -112,10 +113,11 @@ var router_data = [
       }
    },
    {  // update resource
-      pattern: '/resource/{name}/{id}',
+      pattern: '/resource/{name}/{key}/{id}',
       put: function(req, res) {
          var postData = JSON.parse(req.postdata.toString());
-         resource.update(db, req.params.name, {'key': req.params.id}, postData, function(err, data) {
+         var selector = {}; selector[req.params.key] = req.params.id;
+         resource.update(db, req.params.name, selector, postData, function(err, data) {
             if (err) {
                res.end(err.message);
             }
@@ -126,9 +128,10 @@ var router_data = [
       }
    },
    {  // delete resource
-      pattern: '/resource/{name}/{id}',
+      pattern: '/resource/{name}/{key}/{id}',
       delete: function(req, res) {
-         resource.remove(db, req.params.name, req.params.id, function(err) {
+         var selector = {}; selector[req.params.key] = req.params.id;
+         resource.remove(db, req.params.name, selector, function(err) {
             if (err) {
                res.end(err.message);
             }

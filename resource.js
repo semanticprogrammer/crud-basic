@@ -18,7 +18,7 @@ exports.createTemplate = function(templateName, opts, callback) {
    }
 };
 
-exports.getCollection = function(db, collectionName, callback) {
+exports.collection = function(db, collectionName, callback) {
    db.collection(collectionName, function(err, collection) {
       if (err) {
          console.log("!!!!!!!!! db is ...." + util.inspect(db));
@@ -32,8 +32,30 @@ exports.getCollection = function(db, collectionName, callback) {
       }
    })
 };
+      
+exports.collectionNames = function(db, callback) {
+   db.collectionNames(function(err, names) {
+      callback(names)
+   })
+};
 
-exports.getArray = function(db, collectionName, callback) {
+exports.collectionsInfo = function(db, callback) {
+   db.collectionsInfo(function(err, cursor) {
+      cursor.toArray(function(err, items) {
+         callback(items);
+      });
+   })   
+};
+
+exports.collectionInfo = function(db, collectionName, callback) {
+   db.collectionsInfo(collectionName, function(err, cursor) {
+      cursor.toArray(function(err, items) {
+         callback(items);        
+      });
+   })
+};
+
+exports.list = function(db, collectionName, callback) {
    db.collection(collectionName, function(err, collection) {
       if (err) {
          console.log("!!!!!!!!! db is ...." + util.inspect(db));
@@ -110,8 +132,8 @@ exports.remove = function(db, collectionName, selector, callback) {
    })
 };
 
-exports.rename = function(db, currentCollectionName, newCollectionName, callback) {
-   db.renameCollection(unescape(currentCollectionName), unescape(newCollectionName), 
+exports.rename = function(db, fromCollection, toCollection, callback) {
+   db.renameCollection(unescape(fromCollection), unescape(toCollection), 
       function (err, output) {
          if (err) {
             callback(err);
@@ -120,5 +142,5 @@ exports.rename = function(db, currentCollectionName, newCollectionName, callback
             callback(err, output);
          }
       }
-   );
+      );
 };

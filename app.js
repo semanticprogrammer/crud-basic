@@ -1,4 +1,3 @@
-//require.paths.unshift('../../lib');
 var 
 fs = require('fs'),
 qs = require('querystring'),
@@ -11,7 +10,7 @@ util = require('util'),
 prepareApp = require('./prepare-app'),
 resource = require('./resource');
 
-var env = JSON.parse(fs.readFileSync('./config/environment.js', 'utf-8'));
+var env = require('./config/environment.json', 'utf-8');
 
 var opts = {
    hostname: env.app.hostname,
@@ -74,7 +73,7 @@ var router_data = [
    {  // resource list
       pattern: '/resource/list/{name}',
       get: function(req, res) {
-         resource.getArray(db, req.params.name, function(err, data) {
+         resource.list(db, req.params.name, function(err, data) {
             if (err) {
                res.end(err.message);
             }

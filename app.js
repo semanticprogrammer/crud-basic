@@ -7,8 +7,7 @@ app = require('mutant/lib/app').app,
 server = require('mutant/lib/server'),
 dust = require('dust'),
 util = require('util'),
-prepareApp = require('./prepare-app'),
-resource = require('./resource');
+prepareApp = require('./prepare-app');
 
 var env = require('./config/environment.json', 'utf-8');
 
@@ -31,11 +30,7 @@ var opts = {
    }
 };
 
-var Db = require('mongodb').Db,
-Connection = require('mongodb').Connection,
-Server = require('mongodb').Server;
-
-var db = new Db(env.data.db, new Server(env.data.host, env.data.port, {}));
+var resource = require(env.data.resource)(env.data);
 
 var router_data = [
    {
@@ -47,7 +42,9 @@ var router_data = [
    {
       pattern: '/main',
       get: function(req, res) {
-         res.render('main');
+         resource.collectionNames(function(names) {
+           res.render('main', names);
+         });
       }
    },
    {
@@ -60,7 +57,7 @@ var router_data = [
       pattern: '/resource/edit/{name}/{key}/{id}',
       get: function(req, res) {
          var selector = {}; selector[req.params.key] = req.params.id;
-         resource.find(db, req.params.name, selector, function(err, data) {
+         resource.find(req.params.name, selector, function(err, data) {
             if (err) {
                res.end(err.message);
             }
@@ -73,12 +70,18 @@ var router_data = [
    {  // resource list
       pattern: '/resource/list/{name}',
       get: function(req, res) {
-         resource.list(db, req.params.name, function(err, data) {
+         resource.list(req.params.name, function(err, data) {
             if (err) {
                res.end(err.message);
             }
             else {
-               res.render(req.params.name + '_list', data);
+               dust.onLoad = function(name, callback) {
+                  res.render('list', data);
+               };
+               res.render(req.params.name + '_list', data, function(err, out) {
+                  if (err) console.log(err.message)
+                  else console.log(out);
+               });
             }
          })
       }
@@ -87,7 +90,7 @@ var router_data = [
       pattern: '/resource/{name}/{key}/{id}',
       get: function(req, res) {
          var selector = {}; selector[req.params.key] = req.params.id;
-         resource.find(db, req.params.name, selector, function(err, data) {
+         resource.find(req.params.name, selector, function(err, data) {
             if (err) {
                res.end(err.message);
             }
@@ -101,7 +104,7 @@ var router_data = [
       pattern: '/resource/{name}',
       post: function(req, res) {
          var postData = qs.parse(req.postdata.toString());
-         resource.add(db, req.params.name, postData, function(err, data) {
+         resource.add(req.params.name, postData, function(err, data) {
             if (err) {
                res.end(err.message);
             }
@@ -116,7 +119,7 @@ var router_data = [
       put: function(req, res) {
          var postData = JSON.parse(req.postdata.toString());
          var selector = {}; selector[req.params.key] = req.params.id;
-         resource.update(db, req.params.name, selector, postData, function(err, data) {
+         resource.update(req.params.name, selector, postData, function(err, data) {
             if (err) {
                res.end(err.message);
             }
@@ -130,12 +133,12 @@ var router_data = [
       pattern: '/resource/{name}/{key}/{id}',
       delete: function(req, res) {
          var selector = {}; selector[req.params.key] = req.params.id;
-         resource.remove(db, req.params.name, selector, function(err) {
+         resource.remove(req.params.name, selector, function(err) {
             if (err) {
                res.end(err.message);
             }
             else {
-               resource.getArray(db, req.params.name, function(err, data) {
+               resource.getArray(req.params.name, function(err, data) {
                   if (err) {
                      res.end(err.message);  
                   }
@@ -171,7 +174,7 @@ function start(callback) {
       res.end('<h3>Resource Not Found</h3><pre>' + req.params.pathname + '</pre>');
    });
    opts.app = app(router);
-   db.open(function(err, db) {
+   resource.open(function(err, db) {
       prepareApp.prepareTemplates(opts.view, callback);
    });   
 }

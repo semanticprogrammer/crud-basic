@@ -6,6 +6,7 @@
    "staticArea": "public",
    "controllerArea": "controller",
    "data": {
+      "resource": "./mongo-resource",
       "host": "10.0.0.11",
       "port": "27017",
       "db": "test"

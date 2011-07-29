@@ -13,24 +13,12 @@ module.exports = function (env) {
       return db.open(callback);
    };
 
-   self.collection = function(collectionName, callback) {
-      db.collection(collectionName, function(err, collection) {
-         if (err) {
-            console.log("!!!!!!!!! db is ...." + util.inspect(db));
-            console.log("!!!!!!!!! err is ...." + util.inspect(err));
-            console.log("!!!!!!!!! db state is ...." + util.inspect(db.state));
-            callback(err, false);
-         }
-         else {
-            callback(err, collection);
-         }
-      })
+   self.collection = function(collectionName, options, callback) {
+      return db.collection(collectionName, options, callback)
    };
-      
-   self.collectionNames = function(callback) {
-      db.collectionNames(function(err, names) {
-         callback(names)
-      })
+
+   self.collectionNames = function(collectionName, callback) {
+      return db.collectionNames(collectionName, callback)
    };
 
    self.collectionsInfo = function(callback) {
@@ -126,16 +114,7 @@ module.exports = function (env) {
    };
 
    self.rename = function(fromCollection, toCollection, callback) {
-      db.renameCollection(unescape(fromCollection), unescape(toCollection), 
-         function (err, output) {
-            if (err) {
-               callback(err);
-            }
-            else {
-               callback(err, output);
-            }
-         }
-         );
+      return db.renameCollection(unescape(fromCollection), unescape(toCollection), callback)
    };
 
    return self;

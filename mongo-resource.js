@@ -16,6 +16,10 @@ module.exports = function (env) {
    self.collection = function(collectionName, options, callback) {
       return db.collection(collectionName, options, callback)
    };
+   
+   self.createCollection = function(collectionName, options, callback) {
+      return db.createCollection(unescape(collectionName), options, callback)
+   };
 
    self.collectionNames = function(collectionName, callback) {
       return db.collectionNames(collectionName, callback)
@@ -126,6 +130,6 @@ module.exports = function (env) {
    self.rename = function(fromCollection, toCollection, callback) {
       return db.renameCollection(unescape(fromCollection), unescape(toCollection), callback)
    };
-
+   
    return self;
 }

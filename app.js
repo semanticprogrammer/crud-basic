@@ -47,6 +47,21 @@ var router_data = [
          });
       }
    },
+   {  // create list
+      pattern: '/resource/createlist/{name}',
+      get: function(req, res) {
+         resource.createCollection(req.params.name, function(err, collection) {
+            if (err) {
+               res.end(err.message);
+            }
+            else {
+               resource.collectionShortNames(function(names) {
+                  res.render('main', names);
+               });               
+            }
+         })
+      }
+   },   
    {
       pattern: '/resource/add/{name}',
       get: function(req, res) {

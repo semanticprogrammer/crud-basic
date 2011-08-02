@@ -20,6 +20,16 @@ module.exports = function (env) {
    self.collectionNames = function(collectionName, callback) {
       return db.collectionNames(collectionName, callback)
    };
+   
+   self.collectionShortNames = function(callback) {
+      var nameList = [], re = new RegExp("^" + db.databaseName + ".");
+      db.collectionNames(function(err, names) {
+         names.forEach(function(element) {
+            nameList.push(element.name.replace(re, ""));
+         });
+         callback(nameList)
+      });      
+   };
 
    self.collectionsInfo = function(callback) {
       db.collectionsInfo(function(err, cursor) {

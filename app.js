@@ -42,7 +42,7 @@ var router_data = [
    {
       pattern: '/main',
       get: function(req, res) {
-         resource.collectionNames(function(err, names) {
+         resource.collectionShortNames(function(names) {
             res.render('main', names);
          });
       }

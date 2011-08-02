@@ -9,7 +9,8 @@
             url: url,
             content: sps.Controls.toObject(),
             onSuccess: function(data) {
-               alert('Update Successful!')
+               alert(data);
+               window.location = "/resource/list/post"
             },
             onError: function(data) {alert('Problem!')}
          });

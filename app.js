@@ -43,7 +43,7 @@ var router_data = [
       pattern: '/main',
       get: function(req, res) {
          resource.collectionNames(function(err, names) {
-           res.render('main', names);
+            res.render('main', names);
          });
       }
    },
@@ -124,7 +124,7 @@ var router_data = [
                res.end(err.message);
             }
             else {
-               res.redirect('/resource/list/' + req.params.name);
+               res.end("Update Successful!");
             }
          })
       }

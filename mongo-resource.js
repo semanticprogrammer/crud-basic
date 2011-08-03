@@ -17,8 +17,8 @@ module.exports = function (env) {
       return db.collection(collectionName, options, callback)
    };
    
-   self.createCollection = function(collectionName, options, callback) {
-      return db.createCollection(unescape(collectionName), options, callback)
+   self.createCollection = function(collectionName, callback) {
+      return db.createCollection(unescape(collectionName), null, callback)
    };
 
    self.collectionNames = function(collectionName, callback) {

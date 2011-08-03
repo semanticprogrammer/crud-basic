@@ -55,10 +55,8 @@ var router_data = [
                res.end(err.message);
             }
             else {
-               resource.collectionShortNames(function(names) {
-                  res.render('main', names);
-               });               
-            }
+               res.end("Collection " + req.params.name + " is created successfully!");
+            }            
          })
       }
    },   

@@ -42,20 +42,46 @@ var router_data = [
    {
       pattern: '/main',
       get: function(req, res) {
-         resource.collectionShortNames(function(names) {
-            res.render('main', names);
+         resource.databaseInfo(function(data) {
+            res.render('main', data);
          });
       }
    },
-   {  // create list
-      pattern: '/resource/createlist/{name}',
-      get: function(req, res) {
+   {  // create collection
+      pattern: '/resource/createcollection/{name}',
+      post: function(req, res) {
          resource.createCollection(req.params.name, function(err, collection) {
             if (err) {
                res.end(err.message);
             }
             else {
-               res.end("Collection " + req.params.name + " is created successfully!");
+               res.end("Collection " + req.params.name + " has created successfully!");
+            }            
+         })
+      }
+   },
+   {  // delete collection
+      pattern: '/resource/deletecollection/{name}',
+      delete: function(req, res) {
+         resource.deleteCollection(req.params.name, function(err) {
+            if (err) {
+               res.end(err.message);
+            }
+            else {
+               res.end("Collection " + req.params.name + " has deleted successfully!");
+            }            
+         })
+      }
+   },
+   {  // rename collection
+      pattern: '/resource/renamecollection/{from}/{to}',
+      put: function(req, res) {
+         resource.renameCollection(req.params.from, req.params.to, function(err) {
+            if (err) {
+               res.end(err.message);
+            }
+            else {
+               res.end("Collection " + req.params.from + " renamed to " + req.params.to + " successfully!");
             }            
          })
       }
@@ -151,11 +177,7 @@ var router_data = [
                res.end(err.message);
             }
             else {
-               resource.getArray(req.params.name, function(err, data) {
-                  if (err) {
-                     res.end(err.message);  
-                  }
-               })
+               res.end("Resource " + req.params.id + " Deleted Successfully!");
             }
          })      
       }

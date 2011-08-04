@@ -5,33 +5,91 @@
    <script src="/script/dom.js" type="text/javascript"></script>
    <script type="text/javascript">
       function createCollection() {
-         collectionName = prompt('Enter new collection name:',' ');
-         sps.AJAX.get({
-            url: '/resource/createlist/' + collectionName,
-            onSuccess: function(data) {
-               alert(data);
-            },
-            onError: function(data) {alert('Problem!')}
-         });
+         collectionName = prompt('Enter new collection name:', '');
+         if (collectionName && collectionName.trim().length > 0) {
+            sps.AJAX.post({
+               url: '/resource/createcollection/' + collectionName.trim(),
+               onSuccess: function(data) {
+                  alert(data);
+               },
+               onError: function(data) {
+                  alert('Connection with server has failed!')
+               }
+            });            
+         }
       };
+      function deleteCollection(collectionName) {
+         if(window.confirm('Are you sure to delete ' + collectionName + '?')) {
+            sps.AJAX.delete({
+               url: '/resource/deletecollection/' + collectionName,
+               onSuccess: function(data) {
+                  alert(data);
+                  window.location.reload(true);
+               },
+               onError: function(data) {
+                  alert('Connection with server has failed!')
+               }
+            });            
+         }
+      };
+      function renameCollection(currentName) {
+         newName = prompt('Enter new name for collection ' + currentName, '');
+         if (newName && newName.trim().length > 0) {
+            sps.AJAX.put({
+               url: '/resource/renamecollection/' + currentName + '/'+ newName,
+               onSuccess: function(data) {
+                  alert(data);
+                  window.location.reload(true);
+               },
+               onError: function(data) {
+                  alert('Connection with server has failed!')
+               }
+            });            
+         }
+      };      
    </script>
    {/page_script}
-{<title}<title>Main Page</title>{/title}
+   {<title}<title>Main Page</title>{/title}   
    {<content}
-      <div class="menu">
-         <div class="header">
-            <h3 class="center">My Data</h3>
-            <a href = "" onClick = "createCollection()">Create New Collection</a>
-         </div>
-         <ul>
-            {#.}
-            <li>
-               <a href="/resource/list/{.}">{.}</a>
-            </li>
-            {/.}
-            <li>
-               <a href="/resource/list/post">Posts</a>
-            </li>
-         </ul>
-      </div>   
+      <div class="page">
+         <form action="/resource/post/key/{.key}" method="put">
+            <header class="section center">
+               <label class="inline">Database:</label>
+               <h2 class="inline">{databaseName}</h2>
+            </header>
+            <div class="section">
+               <a href = "" onClick = "createCollection()" class="border link button">Create New Collection</a>
+            </div>
+            <table class="data">
+               <thead>
+                  <tr>
+                     <th scope="col">Collection Name</th>
+                     <th scope="col" colspan="2">Action</th>
+                  </tr>
+               </thead>
+               <col id="collection-name"/>
+               <col id="actions"/>
+               <tbody>
+                  <tr>
+                     <td><a href="/resource/list/post">To work with post collection we already have corresponding templates</a></td>
+                     <td>
+                     </td>
+                     <td>
+                     </td>
+                  </tr>
+                  {#collectionNames}
+                  <tr>
+                     <td><a href="/resource/list/{.}">{.}</a></td>
+                     <td>
+                        <a href = "#" onClick = "renameCollection('{.}')" class="link button">Rename</a>
+                     </td>
+                     <td>
+                        <a href = "#" onClick = "deleteCollection('{.}')" class="link button">Delete</a>
+                     </td>
+                  </tr>
+                  {/collectionNames}
+               </tbody>
+            </table>
+         </form>
+      </div>
       {/content}

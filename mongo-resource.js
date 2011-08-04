@@ -12,14 +12,29 @@ module.exports = function (env) {
    self.open = function(callback) {
       return db.open(callback);
    };
-
+   
+   self.databaseName = function() {
+      return db.databaseName;
+   };
+   
    self.collection = function(collectionName, options, callback) {
       return db.collection(collectionName, options, callback)
    };
    
    self.createCollection = function(collectionName, callback) {
-      return db.createCollection(unescape(collectionName), null, callback)
+      return db.createCollection(unescape(collectionName),  {
+         capped:true, 
+         size:100000
+      }, callback)
    };
+   
+   self.deleteCollection = function(collectionName, callback) {
+      db.collection(collectionName, function(err, collection) {
+         collection.drop(function(err) {
+            callback(err)
+         })
+      })
+   };   
 
    self.collectionNames = function(collectionName, callback) {
       return db.collectionNames(collectionName, callback)
@@ -35,6 +50,18 @@ module.exports = function (env) {
       });      
    };
 
+   self.databaseInfo = function(callback) {
+      var data = {}, re = new RegExp("^" + db.databaseName + ".");
+      data.databaseName = db.databaseName;
+      data.collectionNames = [];
+      db.collectionNames(function(err, names) {
+         names.forEach(function(element) {
+            data.collectionNames.push(element.name.replace(re, ""));
+         });
+         callback(data)
+      });      
+   };
+   
    self.collectionsInfo = function(callback) {
       db.collectionsInfo(function(err, cursor) {
          cursor.toArray(function(err, items) {
@@ -127,7 +154,7 @@ module.exports = function (env) {
       })
    };
 
-   self.rename = function(fromCollection, toCollection, callback) {
+   self.renameCollection = function(fromCollection, toCollection, callback) {
       return db.renameCollection(unescape(fromCollection), unescape(toCollection), callback)
    };
    

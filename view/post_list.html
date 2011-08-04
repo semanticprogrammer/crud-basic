@@ -4,58 +4,61 @@
    <script src="/script/ajax.js" type="text/javascript"></script>
    <script src="/script/dom.js" type="text/javascript"></script>
    <script type="text/javascript">
-      function removePost(url) {
-         if(!window.confirm('Are you sure?')) return false;
-         sps.AJAX.delete({url: url,
-            onSuccess: function(data) {
-               alert('Deleted Successful!')
-            },
-            onError: function(data) {alert('Problem!')}
-         });
-         return true;
+      function deleteResource(key) {
+         if (window.confirm('Are you sure to delete ' + key + '?')) {
+            sps.AJAX.delete({
+               url: '/resource/post/key/' + key,
+               onSuccess: function(data) {
+                  alert(data);
+                  window.location.reload(true);
+               },
+               onError: function(data) {
+                  alert('Connection with server has failed!')
+               }
+            });            
+         }
       }
    </script>
    {/page_script}
-{<title}<title>Posts</title>{/title}
-{<content}
-      <div class="border body">
-         <div class="block">
-            <a href="/resource/add/post" class="border link button">Add Post</a>            
+   {<title}<title>Posts</title>{/title}
+      {<content}
+         <div class="page">
+            <div class="section">
+               <a href="/resource/add/post" class="border link button">Add Post</a>            
+            </div>
+            <table class="data">
+               <thead>
+                  <tr>
+                     <th scope="col">Title</th>
+                     <th scope="col">Date</th>
+                     <th scope="col">Content</th>
+                     <th scope="col" colspan="2">Action</th>
+                  </tr>
+               </thead>
+               <col id="title"/>
+               <col id="date"/>
+               <col id="content"/>
+               <tbody>
+                  {#.}
+                  <tr>
+                     <td>
+                        {title}
+                     </td>
+                     <td>
+                        <time datetime="{date}" class="byline"><{date}></time>
+                     </td>
+                     <td>
+                        {content}
+                     </td>
+                     <td>
+                        <a href="/resource/edit/post/key/{key}" class="link button">Edit</a>
+                     </td>
+                     <td>
+                        <a href="#" onclick="deleteResource('{key}')" class="link button">Delete</a>
+                     </td>
+                  </tr>
+                  {/.}
+               </tbody>
+            </table>
          </div>
-         <table>
-            <thead>
-               <tr>
-                  <th scope="col">Title</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Content</th>
-                  <th scope="col"></th>
-                  <th scope="col"></th>
-               </tr>
-            </thead>
-            <col id="title"/>
-            <col id="date"/>
-            <col id="content"/>
-            <tbody>
-               {#.}
-               <tr>
-                  <td>
-                     {title}
-                  </td>
-                  <td>
-                     <time datetime="{date}" class="byline"><{date}></time>
-                  </td>
-                  <td>
-                     {content}
-                  </td>
-                  <td>
-                     <a href="/resource/edit/post/key/{key}" class="link button">Edit</a>
-                  </td>
-                  <td>
-                     <a href="" onclick="removePost('/resource/post/key/{key}')" class="link button">Delete</a>
-                  </td>
-               </tr>
-               {/.}
-            </tbody>
-         </table>
-      </div>
-{/content}
+         {/content}

@@ -1,0 +1,91 @@
+.relative {
+	position: relative;
+}
+
+.float-left {
+	float: left;
+}
+
+.float-right {
+	float: right;
+}
+
+.clear-float {
+	clear: both;
+}
+
+.enclose {
+	overflow: hidden;
+	height: 100%;
+}
+
+/* easy clearing method */
+/* http://www.positioniseverything.net/easyclearing.html */
+.clearfix:after {
+	content: "."; 
+	display: block; 
+	height: 0; 
+	clear: both; 
+	visibility: hidden;
+}
+
+.hide {
+	display: none;
+}
+
+.block {
+	display: block;
+}
+
+.inline {
+	display: inline;
+}
+
+.inline-block {
+	display: inline-block;
+}
+
+.cell {
+	float: left;
+   position: relative;
+}
+
+.column {
+	display: table-cell;
+}
+
+.align-top {
+	vertical-align: top;
+}
+
+.align-middle {
+	vertical-align: middle;
+}
+
+.align-bottom {
+	vertical-align: bottom;
+}
+
+h1.left, h2.left, h3.left, h4.left, h5.left, h6.left {
+	text-align: left;
+}
+
+h1.center, h2.center, h3.center, h4.center, h5.center, h6.center {
+	text-align: center;
+}
+
+h1.right, h2.right, h3.right, h4.right, h5.right, h6.right {
+	text-align: right;
+}
+
+.left-text {
+	text-align: left;
+}
+
+.right-text {
+	text-align: right;
+}
+
+.center-text {
+	text-align: center;
+}

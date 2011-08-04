@@ -1,0 +1,11 @@
+.page>.header, .page>.footer {
+	display:none;
+}
+
+.unprintable {
+	display:none;
+}
+
+th {
+   border-color:black !important;
+}

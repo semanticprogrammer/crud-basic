@@ -1,0 +1,251 @@
+body {
+   background:#F2FFC6 url(image/body-background.jpg) repeat fixed left top;
+}
+
+.title, .slogan, .figure>p {
+   color: black;
+}
+
+.subtitle {
+   color: #003399;
+}
+
+.legal {
+   color: #a775a1;
+}
+
+a {
+   color: #ae4eb5;
+}
+
+a img {
+   border: none;
+}
+
+.errors {
+   color: #000000;
+   border-color: #ae4eb5;
+   background: #ffbcea url(image/errors-background.jpg) repeat-x scroll left top;
+}
+
+a.tooltip:hover span {
+   background-color:#cff;
+   color:#000;
+   border-color: #0cf;
+}
+
+.page>.body {
+   border-color: #a775a1;
+   background: #e8f3c3 url(image/page-background.jpg) repeat-x scroll left top;
+}
+
+.form>.body {
+   background: url(image/area-background-even.jpg) repeat scroll left top;
+}
+
+.form>.footer {
+   background: url(image/area-background.jpg) repeat scroll left top;
+}
+
+.page>.header {
+   background: none;
+   color: black;
+}
+
+.page>.footer {
+   background: none;
+}
+
+.section > .byline {
+   color: #003399;
+}
+
+.block>.header, .block>.footer {
+   background-color: #DCDBBD;
+   border-color: #6E6B5C;
+}
+
+.menu {
+   background-color: #e8ffbb;
+   border-color: #a775a1;
+   background: url(image/area-background.jpg) repeat scroll left top;
+}
+
+li.separator, .menu.block ul>li.parent {
+   border-color: #003399;
+}
+
+.menu li.selected {
+   background-color:#FFF4D8;
+}
+
+.menu li>a, .menubar>ul>li>a {
+   border-color: transparent;
+}
+
+.menu li.selected>a {
+   background-color: #FFF4D8;
+   color: #7F170F;
+   border-color: #7F170F;
+}
+
+.menu li>a:hover {
+   border-color: #ae4eb5;
+   background-color: #efdcf0;
+}
+
+.menu a {
+   color: #383e2e;
+}
+
+.menubar>ul>li>a {
+   color: #ae4eb5;
+}
+
+.menu > ul > li > span, .menubar > ul > li > span {
+   color: silver;
+}
+
+.breadcrumbs, .tabs {
+   border-color: #a775a1;
+   background: #e8f4c4 url(image/breadcrumbs-background.jpg) repeat-y scroll left top;
+}
+
+.tabs {
+   border-color: #a775a1;
+}
+
+.breadcrumbs>ul>li>a, .tabs>ul>li>a {
+   color: #ae4eb5;
+}
+
+.breadcrumbs ul li:before, .tabs ul li:before {
+   color: #4c0000;
+}
+/* ----------------------------------------- table ------------------------------------------------ */
+
+table {
+   border-color: #000000;
+}
+
+thead {
+   background: url(image/header-background.jpg) repeat scroll left top;
+/*   color: #e8ffbb;*/
+}
+
+th, td {
+   border-color: #6E6B5C;
+}
+
+thead th{
+/*   border-color: #6E6B5C #E8FFBB;*/
+}
+
+thead th:first-child{
+   border-color: #6E6B5C #E8FFBB #6E6B5C #6E6B5C;
+}
+
+tbody > tr {
+   background: url(image/area-background.jpg) repeat scroll left top;
+}
+
+tbody > tr:nth-child(even) {
+   background: url(image/area-background-even.jpg) repeat scroll left top;
+}
+
+table.hover-row tbody>tr:hover {
+   background-color: #FFEC8B;
+   color: #000000;
+}
+
+td .selected {
+   background-color: #A8E990;
+}
+
+td .link {
+   color: #003399;
+}
+
+/*
+thead tr:hover {
+background-color: transparent;
+color: inherit;
+}
+*/
+
+/* ----------------------------------------- form ------------------------------------------------ */
+
+form.background .form.background {
+   background-color: #FFFFFF;
+}
+
+form .header, .form .header {
+   background: url(image/header-background.jpg) repeat scroll left top;
+   color: #e8ffbb;
+   border-color: #6E6B5C;
+}
+
+form>.footer, .form>.footer {
+   border-color: #6E6B5C;
+}
+
+.form-area {
+   border-color: #6f7750;
+}
+
+.toolbar {
+   border-color: #6f7750;
+}
+
+.scrollbar {
+   border-color: #6f7750;
+}
+
+fieldset {
+   background-color: #EEEBDC;
+   border-color: #ccc;
+}
+
+h3.border {
+   border-color: #6f7750;
+}
+
+label > .required {
+   color:#760000;
+}
+
+.ok {
+   color: #00B713;
+   border-color: #00B713;
+}
+
+.warning, .error {
+   color: red;
+   border-color: red;
+}
+
+.info {
+   color: #C94EB5;
+   border-color: #C94EB5;
+}
+
+/* ----------------------------------------- elements ------------------------------------------------ */
+
+select[disabled="disabled"] {
+   color: black;
+}
+
+.date {
+   color: #003399;
+}
+
+h3.disabled {
+   color: silver;
+}
+
+.field-label {
+
+}
+.ignored {
+   color: #F6F6F6;
+}

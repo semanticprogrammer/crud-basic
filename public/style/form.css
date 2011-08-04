@@ -1,0 +1,1169 @@
+body {
+   margin: 0;
+   padding: 0;
+   font-weight: normal;
+   font-family: Helvetica, 'Trebuchet MS', Trebuchet, Verdana, Arial;
+   font-size: 1em;
+}
+
+header {
+   margin: 0;
+   padding: 0;
+}
+
+.header {
+   position: relative;
+   margin: 0;
+   padding: 0;
+}
+
+.body, .footer {
+   clear: both;
+   overflow: hidden;
+   height: 100%;
+   margin: 0;
+   padding: 0;
+}
+
+.page {
+   font-size: 16px;
+   position: relative;
+   margin: 0.3em auto;
+   width: 47.5em;
+   text-align: left;
+}
+
+.one-third {
+   width: 15em;
+}
+
+.two-third {
+   width: 31em;
+}
+
+.one-half {
+   width: 22em;
+}
+
+.one {
+   width: 45.5em;
+}
+
+.column {
+   margin: 0;
+   padding:0 0.4em;
+}
+
+div.page {
+   display: inline-block;
+}
+
+.page>.body {
+   min-height: 25em;
+   padding-top: 1em;
+}
+
+article {
+   margin: 1em 0.5em 0 1em;
+   padding-bottom: 0.5em;
+}
+
+section {
+   margin: 0.5em 0 0 0em;
+   padding: 0;
+}
+
+form {
+   text-align: left;
+}
+
+.form {
+   margin: 1em;
+   padding: 0;
+   border: 1px solid;
+}
+
+.form-area {
+   margin: 1em 0;
+   padding: 0;
+}
+
+form.form {
+   position: relative;
+   margin: 1em auto;
+}
+
+.form>.body {
+   clear: both;
+   position: relative;
+   overflow: hidden;
+   height: 100%;
+   margin: 0;
+   padding: 0 0.5em;
+}
+
+.form>.footer {
+   border-top: 1px solid;
+}
+
+.vertical.form label, .vertical.form-area label {
+   display: block;
+   margin: 0;
+}
+
+ul.form, ul.form-area, ul.body {
+   list-style: none;
+   padding: 0;
+}
+
+ul.border.form-area {
+   padding: 0.5em;
+}
+
+.toolbar {
+   margin: 0 0.5em;
+   padding: 0;
+   border: 0;
+}
+
+.scrollbar {
+   margin: 0.5em 0.5em 1.5em 0.5em;
+   padding: -1em;
+   overflow:auto;
+   max-height: 25em;
+}
+
+.scrollbar table{
+   margin: 0px;
+}
+
+div.table-holder{
+   overflow:hidden;
+}
+
+.tight {
+   margin: -1em 0 0 0;
+}
+
+.toolbar>input[type="submit"], .toolbar>label, .toolbar>input {
+   margin: 0.5em 0.5em 0.5em 0;
+}
+
+fieldset {
+   margin: 0.5em;
+   padding: 1em;
+   border: 1px solid;
+}
+
+legend {
+   font-weight: bold;
+}
+
+.layer {
+   position: relative;
+}
+
+.section {
+   margin: 1em 0.5em 0 1em;
+   padding-bottom: 0.5em;
+}
+
+.area {
+   margin: 1em 0.5em;
+   padding: 0.5em;
+}
+
+p {
+   margin: 0;
+   padding: 0.5em;
+   font-size: 0.8em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+   margin: 0;
+   padding: 0.3em 0.5em 0.3em 0;
+}
+
+h1 {
+   font-family: Arial;
+   font-size: 1.2em;
+/*   font-weight: normal;*/
+}
+
+h2 {
+   font-size: 1em;
+   font-weight: bold;
+}
+
+h3 {
+   font-size: 0.8em;
+   font-weight: bold;
+}
+
+h3.border {
+   padding: 0.25em 0.5em;
+}
+
+h3.medium {
+   width: 11.5em;
+}
+
+h3.small {
+   width: 3em;
+}
+
+h4 {
+   font-size: 0.7em;
+   font-weight: bold;
+}
+
+h5 {
+   font-size: 0.6em;
+   font-weight: bold;
+}
+
+h6 {
+   font-size: 0.5em;
+   font-weight: bold;
+}
+
+.subtitle {
+   font-size: 0.8em;
+   font-weight: normal;
+   text-align: left;
+}
+
+label {
+   margin: 0;
+   font-size: 0.8em;
+   font-weight: normal;
+}
+
+.bigger-font {
+   font-size: 1.1em;
+}
+
+input, select {
+   margin: 0.2em 0 0.5em 0;
+}
+
+select {
+   width: 12.5em;
+}
+
+input[type="text"] {
+   width: 5.5em;
+}
+
+input[type="text"].small {
+   width: 3em;
+}
+
+input[type="text"].medium {
+   width: 12em;
+}
+
+input[type="text"].long {
+   width: 16.5em;
+}
+
+td.w1 {
+   width: 1em;
+}
+
+td.w3 {
+   width: 3em;
+}
+
+td.w3>input {
+   width: 3em;
+}
+
+td.w4 {
+   width: 4em;
+}
+
+td.w4>input {
+   width: 4em;
+}
+
+td.w5 {
+   width: 5em;
+}
+
+td.w5>input {
+   width: 5em;
+}
+
+td.w6 {
+   width: 6em;
+}
+
+td.w6>input {
+   width: 6em;
+}
+
+td.w7 {
+   width: 7em;
+}
+
+td.w7>input {
+   width: 7em;
+}
+
+
+
+.em1 {
+   width: 1em;
+}
+
+.em1 input, .em1 select {
+   width: 0em;
+}
+
+.em2 {
+   width: 2em;
+}
+
+.em2 input, .em2 select {
+   width: 1em;
+}
+
+.em3 {
+   width: 3em;
+}
+
+.em3 input, .em3 select {
+   width: 2em;
+}
+
+.em4 {
+   width: 4em;
+}
+
+.em4 input, .em4 select {
+   width: 3em;
+}
+
+.em5 {
+   width: 5em;
+}
+
+.em5 input, .em5 select {
+   width: 4em;
+}
+
+.em6 {
+   width: 6em;
+}
+
+.em6 input, .em6 select {
+   width: 5em;
+}
+
+.em7 {
+   width: 7em;
+}
+
+.em7 input, .em7 select {
+   width: 6em;
+}
+
+.em8 {
+   width: 8em;
+}
+
+.em8 input, .em8 select {
+   width: 7em;
+}
+
+.em9 {
+   width: 9em;
+}
+
+.em9 input, .em9 select {
+   width: 8em;
+}
+
+.em10 {
+   width: 10em;
+}
+
+.em10 input, .em10 select {
+   width: 9em;
+}
+
+.em11 {
+   width: 11em;
+}
+
+.em11 input, .em11 select {
+   width: 10em;
+}
+
+.em12 {
+   width: 12em;
+}
+
+.em12 input, .em12 select {
+   width: 11em;
+}
+
+.em13 {
+   width: 13em;
+}
+
+.em13 input, .em13 select {
+   width: 12em;
+}
+
+.em14 {
+   width: 14em;
+}
+
+.em14 input, .em14 select {
+   width: 13em;
+}
+
+.em15 {
+   width: 15em;
+}
+
+.em15 input, .em15 select {
+   width: 14em;
+}
+
+.em16 {
+   width: 16em;
+}
+
+.em16 input, .em16 select, .em16 textarea  {
+   width: 15em;
+}
+
+.em17 {
+   width: 17em;
+}
+
+.em17 input, .em17 select {
+   width: 16em;
+}
+
+.em18 {
+   width: 18em;
+}
+
+.em18 input, .em18 select {
+   width: 17em;
+}
+
+.em19 {
+   width: 19em;
+}
+
+.em19 input, .em19 select {
+   width: 18em;
+}
+
+.em20 {
+   width: 20em;
+}
+
+.em20 input, .em20 select {
+   width: 19em;
+}
+
+.em21 {
+   width: 21em;
+}
+
+.em21 input, .em21 select {
+   width: 20em;
+}
+
+.em22 {
+   width: 22em;
+}
+
+.em22 input, .em22 select {
+   width: 21em;
+}
+
+.em23 {
+   width: 23em;
+}
+
+.em23 input, .em23 select {
+   width: 22em;
+}
+
+.em24 {
+   width: 24em;
+}
+
+.em24 input, .em24 select {
+   width: 23em;
+}
+
+.em25 {
+   width: 25em;
+}
+
+.em25 input, .em25 select {
+   width: 24em;
+}
+
+.em26 {
+   width: 26em;
+}
+
+.em26 input, .em26 select {
+   width: 25em;
+}
+
+.em27 {
+   width: 27em;
+}
+
+.em27 input, .em27 select {
+   width: 26em;
+}
+
+.em28 {
+   width: 28em;
+}
+
+.em28 input, .em28 select {
+   width: 27em;
+}
+
+.em29 {
+   width: 29em;
+}
+
+.em29 input, .em29 select {
+   width: 28em;
+}
+
+.em30 {
+   width: 30em;
+}
+
+.em30 input, .em30 select {
+   width: 29em;
+}
+
+.em31 {
+   width: 31em;
+}
+
+.em31 input, .em31 select {
+   width: 30em;
+}
+
+.em32 {
+   width: 32em;
+}
+
+.em32 input, .em32 select, .em32 textarea {
+   width: 31em;
+}
+
+.em33 {
+   width: 33em;
+}
+
+.em33 input, .em33 select {
+   width: 32em;
+}
+
+.em34 {
+   width: 34em;
+}
+
+.em34 input, .em34 select {
+   width: 33em;
+}
+
+.em35 {
+   width: 35em;
+}
+
+.em35 input, .em35 select {
+   width: 34em;
+}
+
+.em36 {
+   width: 36em;
+}
+
+.em36 input, .em36 select {
+   width: 35em;
+}
+
+.em37 {
+   width: 37em;
+}
+
+.em37 input, .em37 select {
+   width: 36em;
+}
+
+.em38 {
+   width: 38em;
+}
+
+.em38 input, .em38 select {
+   width: 37em;
+}
+
+.em39 {
+   width: 39em;
+}
+
+.em39 input, .em39 select {
+   width: 38em;
+}
+
+.em40 {
+   width: 40em;
+}
+
+.em40 input, .em40 select {
+   width: 39em;
+}
+
+.em41 {
+   width: 41em;
+}
+
+.em41 input, .em41 select {
+   width: 40em;
+}
+
+.em42 {
+   width: 42em;
+}
+
+.em42 input, .em42 select {
+   width: 41em;
+}
+
+.em43 {
+   width: 43em;
+}
+
+.em43 input, .em43 select {
+   width: 42em;
+}
+
+.em44 {
+   width: 44em;
+}
+
+.em44 input, .em44 select {
+   width: 43em;
+}
+
+.em45 {
+   width: 45em;
+}
+
+.em45 input, .em45 select {
+   width: 44em;
+}
+
+.em46 {
+   width: 46em;
+}
+
+.em46 input, .em46 select {
+   width: 45em;
+}
+
+.em47 {
+   width: 47em;
+}
+
+.em47 input, .em47 select {
+   width: 46em;
+}
+
+.em48 {
+   width: 48em;
+}
+
+.em48 input, .em48 select {
+   width: 47em;
+}
+
+.vlabel input[type="checkbox"] {
+   width: 1em;
+   margin-left: 0.2em;
+}
+
+.grid > li {
+   display: inline-block;
+   height: 3.5em;
+   margin: 0 -0.5em 0 0;
+}
+
+.grid > li.half-height {
+   height: 1.7em;
+}
+
+.grid > li.double-height {
+   height: 7em;
+}
+
+.grid > li.double-height textarea {
+   height: 4.6em;
+}
+
+.grid {
+   width: 32.5em;
+   margin: 0.5em 0 1em 0;
+   padding-left:0.5em;
+   font-size: 0.8em;
+}
+
+.grid.g32{
+   width: 32.5em;
+}
+
+.grid.g48{
+   width: 48.5em;
+}
+
+.grid.g24{
+   width: 24.5em;
+}
+
+.grid.g16{
+   width: 16.5em;
+}
+
+.grid li input, .grid li select, .grid li textarea {
+   font-size: 1em;
+   margin: 0 0.5em;
+}
+
+.grid li select {
+   font-size: 1.03em;
+   margin: 0 0.5em;
+}
+
+.grid li label {
+   font-size: 1em;
+   padding:0.5em 0.5em 0.2em 0.5em;
+}
+
+.grid li.last {
+   width:100%;
+   margin:1em 0;
+   height:0.5em;
+}
+
+.confirmation li label {
+   width:9em;
+   display:inline-block;
+   text-align:right;
+}
+
+.confirmation.w5 li label {
+   width:5em;
+}
+
+.confirmation.w10 li label {
+   width:10em;
+}
+
+.confirmation li > span {
+   display:inline-block;
+   font-size:0.95em;
+   margin-top:0.3em;
+}
+
+.confirmation li > span > select {
+   margin-bottom:0;
+}
+
+input[type="submit"] {
+   width: 6em;
+}
+
+input[type="submit"].auto {
+   width: auto;
+}
+
+input[type="submit"].medium {
+   width: 12.5em;
+}
+
+input[type="submit"].average {
+   width: 8em;
+}
+
+h3.inline {
+   width: 6em;
+}
+
+input.horizontal {
+   margin: 0 0 0.5em 0.5em;
+}
+
+input[type="submit"] {
+   margin: 0.5em 0 0.5em 0;
+}
+
+input[type="submit"].horizontal {
+   margin: 0 0 0.5em 0.5em;
+}
+
+input[type="submit"].ok-button {
+   float: right;
+   margin: 0.5em 6.5em 0.5em -20em;
+   width: 5em;
+}
+
+input[type="submit"].cancel-button {
+   float: right;
+   margin: 0.5em 1.1em 0.5em 0.5em;
+   width: 5em;
+}
+
+.page>.header>h1 {
+   text-transform: uppercase;
+   letter-spacing: 0.1em;
+}
+
+.logo {
+   float: left;
+   margin: 0;
+   padding: 0;
+}
+
+.slogan {
+   font-size: 0.8em;
+   font-weight: bold;
+   font-style: oblique;
+}
+
+.closeButton {
+   float:right;
+   margin-right:0.5em;
+}
+
+.legal {
+   padding: 0.3em 0;
+   font-size: 0.7em;
+   font-weight: normal;
+   text-decoration: none;
+}
+
+.frame {
+   margin: 0.5em;
+   border: 1px solid;
+}
+
+.border-area {
+   margin: 1em 0.5em;
+   padding: 1em 0 0.5em 0;
+   border-top: 1px outset;
+   border-bottom: 1px inset;
+}
+
+.byline {
+   padding: 0.1em 0.5em;
+   font-family: Helvetica, 'Trebuchet MS';
+   font-size: 0.7em;
+   font-weight: normal;
+}
+
+ul.data {
+   list-style-image: none;
+   list-style-position: outside;
+   list-style-type: none;
+   margin: 0.5em;
+   padding: 0;
+}
+
+ul.value {
+   font-size: 0.8em;
+   font-weight: normal;
+}
+
+ul.data a {
+   padding: 0;
+}
+
+ol {
+   margin: 0.5em 0 0.5em 20px;
+   padding: 0 10px;
+}
+
+ol.value {
+   font-size: 0.8em;
+   font-weight: normal;
+}
+
+.block ol li {
+   margin: 0;
+   padding: 0;
+   border: 0;
+}
+
+hr {
+   background-color:#D4D4D4;
+   border:0 none;
+   color:#D4D4D4;
+   height:1px;
+}
+
+/* -------------------- link ------------------------- */
+
+.link {
+   margin: 0;
+   padding: 0.25em;
+   text-decoration: none;
+   font-size: 0.8em;
+   font-weight: bold;
+}
+
+.normal.link, .value.link {
+   font-weight: normal;
+}
+
+.print.link {
+   background: url(../image/print.gif) no-repeat left top;
+   padding-left: 20px;
+}
+
+.external.link {
+   background: url(../image/external-link.gif) no-repeat right top;
+   padding-right: 10px;
+}
+
+.internal.link {
+   background-image: none;
+   padding-right: 0;
+}
+
+a[href^="mailto:"] {
+   background: url(../image/email.png) no-repeat right top;
+   padding-right: 15px;
+}
+
+a[href^="aim:"] {
+   background: url(../image/im.png) no-repeat right top;
+   padding-right: 15px;
+}
+
+/* -------------------- tooltip ------------------------- */
+
+a.tooltip {
+   position: relative;
+   z-index:24;
+}
+
+a.tooltip span {
+   display: none;
+}
+
+a.tooltip:hover span {
+   display: block;
+   position: absolute;
+   top: 2em;
+   left: 0em;
+   width: 13em;
+   padding: 0.25em;
+   border: 1px solid;
+   text-decoration: none;
+}
+
+/* -------------------- table ------------------------- */
+
+table {
+   margin: 0 0 1em 0;
+   border-collapse: collapse;
+   border: 1px solid;
+   font-size: 0.95em;
+   width:100%;
+}
+
+table.data {
+   margin: 1em;
+}
+
+caption {
+   margin: 1em 1em 0.5em;
+   padding: 0;
+   font-size: 1em;
+   font-weight: bold;
+   text-align: left;
+}
+
+th {
+   padding: 0.5em;
+   border-left: solid 1px;
+   border-bottom: solid 1px;
+   font-size: 0.8em;
+   font-weight: bold;
+/*   text-align: left;*/
+}
+
+tr {
+   border-bottom: 1px solid;
+}
+
+td {
+   padding: 0.25em 0.5em;
+   border-left: solid 1px;
+   text-align: left;
+   font-size: 0.8em;
+   font-weight: normal;
+}
+
+.separator {
+   margin: 0.5em 0.5em 1em 0.5em;
+   padding: 0;
+   border-bottom: 1px inset;
+}
+
+.button {
+   width: 5em;
+}
+
+.errors {
+   font-size:0.7em;
+   display: block;
+   border: solid 1px;
+   width: 15em;
+   padding: 0.5em;
+   position:absolute;
+   float: left;
+   top:0;
+   left:0;
+}
+
+.identifier {
+   font-size: 0.8em;
+   font-weight: bold;
+}
+
+.bold {
+   font-weight: bold;
+}
+
+.bolder {
+   font-weight: bolder;
+}
+
+.lighter {
+   font-weight: lighter;
+}
+
+span.identifier, div.identifier {
+   padding: 0;
+}
+
+td > span.identifier {
+   padding: 0.1em 0.5em;
+}
+
+.name {
+   font-size: 0.8em;
+   font-weight: bold;
+}
+
+span.name, div.name {
+   padding: 0.1em 0.5em;
+}
+
+td > span.name {
+   padding: 0.5em;
+}
+
+.field-label {
+   font-size: 0.7em;
+   margin-right:0.1em;
+   text-transform: uppercase;
+}
+
+span.field {
+   margin:0.2em;
+   display:inline-block;
+   white-space: nowrap;
+}
+
+time {
+   padding: 0 0 0 0;
+   font-size: 0.8em;
+}
+
+.date {
+   font-family: Helvetica, 'Trebuchet MS';
+   font-size: 0.8em;
+}
+
+span.date, div.date {
+   padding: 0.1em 0.5em;
+}
+
+.value {
+   font-size: 0.8em;
+}
+
+span.value, div.value {
+   padding: 0.1em 0.5em;
+}
+
+td > span.value, td > input.value {
+   padding: 0.5em;
+}
+
+td > input[type="checkbox"].value {
+   margin: 0.5em;
+}
+
+a.value {
+   padding: 0.1em 0.5em;
+}
+
+td > a.value {
+   padding: 0.5em;
+}
+
+.description {
+   font-size: 0.8em;
+}
+
+span.description, div.description {
+   padding: 0.1em 0.5em;
+}
+
+.checkbox-column {
+   width: 1em;
+}
+
+.warning, .error, .info {
+   display: inline-block;
+   margin: 0.5em;
+   padding: 0.25em;
+   font-size: 0.8em;
+   border: 1px solid;
+}
+
+span.user-name {
+   padding: 0.25em 1em;
+   font-size: 0.8em;
+   font-weight: bold;
+}
+
+.none {
+   display: none;
+}
+
+.border {
+   border: 1px solid;
+}

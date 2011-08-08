@@ -11,6 +11,7 @@
                url: '/resource/createcollection/' + collectionName.trim(),
                onSuccess: function(data) {
                   alert(data);
+                  window.location.reload(true);                  
                },
                onError: function(data) {
                   alert('Connection with server has failed!')
@@ -52,13 +53,13 @@
    {<title}<title>Main Page</title>{/title}   
    {<content}
       <div class="page">
-         <form action="/resource/post/key/{.key}" method="put">
+         <form>
             <header class="section center">
                <label class="inline">Database:</label>
                <h2 class="inline">{databaseName}</h2>
             </header>
             <div class="section">
-               <a href = "" onClick = "createCollection()" class="border link button">Create New Collection</a>
+               <a href = "#" onClick = "createCollection()" class="border link button">Create New Collection</a>
             </div>
             <table class="data">
                <thead>

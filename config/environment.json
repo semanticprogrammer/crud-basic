@@ -17,6 +17,7 @@
       "ext": ".html"
    },
    "template": {
+      "resource": "./dust-resource",
       "area": "repository/template",
       "ext": ".html"
    }

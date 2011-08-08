@@ -5,9 +5,7 @@ connect = require('connect'),
 router = require('mutant/lib/router').router,
 app = require('mutant/lib/app').app,
 server = require('mutant/lib/server'),
-dust = require('dust'),
-util = require('util'),
-prepareApp = require('./prepare-app');
+util = require('util');
 
 var env = require('./config/environment.json', 'utf-8');
 
@@ -16,21 +14,12 @@ var opts = {
    port: env.app.port,
    view: {
       dir: env.view.area,
-      ext: env.view.ext,
-      compileFunc: dust.compile,
-      loadFunc: dust.loadSource,
-      renderFunc: dust.render
-   },
-   template: {
-      dir: env.template.area,
-      ext: env.template.ext,
-      compileFunc: dust.compile,
-      loadFunc: dust.loadSource,
-      renderFunc: dust.render
+      ext: env.view.ext
    }
 };
 
 var resource = require(env.data.resource)(env.data);
+var templateResource = require(env.template.resource)();
 
 var router_data = [
    {
@@ -114,9 +103,6 @@ var router_data = [
                res.end(err.message);
             }
             else {
-               dust.onLoad = function(name, callback) {
-                  res.render('list', data);
-               };
                res.render(req.params.name + '_list', data, function(err, out) {
                   if (err) console.log(err.message)
                   else console.log(out);
@@ -188,16 +174,13 @@ var router_data = [
 ];
 
 function start(callback) {
-   dust.optimizers.format = function(ctx, node) {
-      return node
-   };
    console.log("Connecting to " + env.data.host + ":" + env.data.port);
    router = router(router_data);
    router.use(function(req, res, next) {
       res.render = function (templatename, data) {
-         opts.template.renderFunc(templatename, data, function (err, output) {
+         templateResource.render(templatename, data, function (err, output) {
             if (err) {
-               throw err;
+               res.end(err.message);
             }
             res.end(output);
          });
@@ -210,7 +193,7 @@ function start(callback) {
    });
    opts.app = app(router);
    resource.open(function(err, db) {
-      prepareApp.prepareTemplates(opts.view, callback);
+      templateResource.prepareTemplates(opts.view, callback);
    });   
 }
 

@@ -9,6 +9,43 @@ module.exports = function (env) {
       return node
    };
    
+   self.render = function (templatename, data, callback) {
+      return dust.render(templatename, data, callback);
+   };
+   
+   self.onLoad = function(name, callback) {
+      return dust.onLoad;
+   }
+//      dust.onLoad = function(name, callback) {
+//                  res.render('list', data);
+//               };   
+   
+   self.prepareTemplates = function (opts, callback) {
+      fs.readdir(opts.dir, function (err, filenames) {
+         if (err) {
+            throw err;
+         }
+         var filesRead = 0;
+         var templateName, pattern = new RegExp('\\' + opts.ext + '$');
+         filenames.forEach(function (filename) {
+            if (pattern.test(filename)) {
+               fs.readFile(path.join(opts.dir, filename), function (err, data) {
+                  if (err) {
+                     throw err;
+                  }
+                  templateName = filename.replace(pattern, '');
+                  dust.loadSource(dust.compile(data.toString(), templateName));
+                  console.log("'" + filename + "' template prepared.");
+                  filesRead += 1;
+                  if (filenames.length === filesRead && callback) {
+                     callback();
+                  }
+               });            
+            }
+         });
+      });
+   };   
+   
    self.createTemplate = function(templateName, callback) {
       var templatePath = path.join(env.dir, templateName + env.ext);
       try {

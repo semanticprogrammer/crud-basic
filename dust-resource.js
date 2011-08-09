@@ -13,12 +13,9 @@ module.exports = function (env) {
       return dust.render(templatename, data, callback);
    };
    
-   self.onLoad = function(name, callback) {
-      return dust.onLoad;
+   self.onLoad = function(fn) {
+      dust.onLoad = fn;
    }
-//      dust.onLoad = function(name, callback) {
-//                  res.render('list', data);
-//               };   
    
    self.prepareTemplates = function (opts, callback) {
       fs.readdir(opts.dir, function (err, filenames) {

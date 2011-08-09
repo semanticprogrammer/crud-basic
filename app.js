@@ -103,6 +103,9 @@ var router_data = [
                res.end(err.message);
             }
             else {
+               templateResource.onLoad(function(name, callback) {
+                  res.render('list', data);
+               });
                res.render(req.params.name + '_list', data, function(err, out) {
                   if (err) console.log(err.message)
                   else console.log(out);

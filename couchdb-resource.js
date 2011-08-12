@@ -3,14 +3,11 @@ module.exports = function (env) {
    util = require('util'),
    self = {};
 
-   var Db = require('mongodb').Db,
-   Connection = require('mongodb').Connection,
-   Server = require('mongodb').Server;
-
-   var db = new Db(env.db, new Server(env.host, env.port, {}));
+   var cradle = require('cradle');
+   var db = new(cradle.Connection)(env.host, env.port).database(env.db);
 
    self.open = function(callback) {
-      return db.open(callback);
+      callback();
    };
    
    self.databaseName = function() {
@@ -22,10 +19,7 @@ module.exports = function (env) {
    };
    
    self.createCollection = function(collectionName, callback) {
-      return db.createCollection(unescape(collectionName),  {
-         capped:true, 
-         size:100000
-      }, callback)
+      db.save(collectionName, callback);
    };
    
    self.deleteCollection = function(collectionName, callback) {
@@ -110,19 +104,7 @@ module.exports = function (env) {
    };
 
    self.add = function(collectionName, postData, callback) {
-      db.collection(collectionName, function(err, collection) {
-         if (err) {
-            callback(err);
-         }
-         else {
-            collection.insert(postData, {
-               safe:true
-            }, function(err, object) {
-               if (err) callback(err)
-               else callback(err, object);
-            });
-         }
-      })
+      db.save(collectionName, postData, callback);
    };
 
    self.update = function(collectionName, selector, postData, callback) {

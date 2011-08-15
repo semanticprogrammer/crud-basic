@@ -3,16 +3,11 @@ fs = require('fs'),
 qs = require('querystring'),
 connect = require('connect'),
 router = require('mutant/lib/router').router,
-app = require('mutant/lib/app').app,
+handler = require('mutant/lib/handler').handler,
 server = require('mutant/lib/server'),
 util = require('util');
 
 var env = require('./config/environment.json', 'utf-8');
-
-var opts = {
-   hostname: env.app.hostname,
-   port: env.app.port
-};
 
 var resource = require(env.data.resource)(env.data);
 var templateResource = require(env.template.resource)();
@@ -168,7 +163,7 @@ var router_data = [
       }
    },   
    {
-      get: connect.static(env.staticArea)
+      get: connect.static(__dirname + "/" + env.staticArea)
    }
 ];
 
@@ -190,13 +185,13 @@ function start(callback) {
       res.setNotFoundStatus();
       res.end('<h3>Resource Not Found</h3><pre>' + req.params.pathname + '</pre>');
    });
-   opts.app = app(router);
+   env.app.handler = handler(router);
    resource.open(function(err, db) {
       templateResource.prepareTemplates(env.view, callback);
    });   
 }
 
 start(function () {
-   server.run(opts);
-   console.log('listening on host: ' + opts.hostname + ' port: ' + opts.port);
+   server.run(env.app);
+   console.log('listening on host: ' + env.app.hostname + ' port: ' + env.app.port);
 });

@@ -17,8 +17,9 @@ module.exports = function (env) {
       dust.onLoad = fn;
    }
    
-   self.prepareTemplates = function (view, callback) {
-      fs.readdir(view.area, function (err, filenames) {
+   self.prepareTemplates = function (view, callback) {      
+      var folderName = __dirname + "/" + view.area;      
+      fs.readdir(folderName, function (err, filenames) {
          if (err) {
             throw err;
          }
@@ -26,7 +27,7 @@ module.exports = function (env) {
          var templateName, pattern = new RegExp('\\' + view.ext + '$');
          filenames.forEach(function (filename) {
             if (pattern.test(filename)) {
-               fs.readFile(path.join(view.area, filename), function (err, data) {
+               fs.readFile(path.join(folderName, filename), function (err, data) {
                   if (err) {
                      throw err;
                   }

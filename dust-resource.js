@@ -17,16 +17,16 @@ module.exports = function (env) {
       dust.onLoad = fn;
    }
    
-   self.prepareTemplates = function (opts, callback) {
-      fs.readdir(opts.dir, function (err, filenames) {
+   self.prepareTemplates = function (view, callback) {
+      fs.readdir(view.area, function (err, filenames) {
          if (err) {
             throw err;
          }
          var filesRead = 0;
-         var templateName, pattern = new RegExp('\\' + opts.ext + '$');
+         var templateName, pattern = new RegExp('\\' + view.ext + '$');
          filenames.forEach(function (filename) {
             if (pattern.test(filename)) {
-               fs.readFile(path.join(opts.dir, filename), function (err, data) {
+               fs.readFile(path.join(view.area, filename), function (err, data) {
                   if (err) {
                      throw err;
                   }
@@ -37,7 +37,7 @@ module.exports = function (env) {
                   if (filenames.length === filesRead && callback) {
                      callback();
                   }
-               });            
+               });
             }
          });
       });

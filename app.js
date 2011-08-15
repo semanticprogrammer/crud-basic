@@ -11,11 +11,7 @@ var env = require('./config/environment.json', 'utf-8');
 
 var opts = {
    hostname: env.app.hostname,
-   port: env.app.port,
-   view: {
-      dir: env.view.area,
-      ext: env.view.ext
-   }
+   port: env.app.port
 };
 
 var resource = require(env.data.resource)(env.data);
@@ -196,7 +192,7 @@ function start(callback) {
    });
    opts.app = app(router);
    resource.open(function(err, db) {
-      templateResource.prepareTemplates(opts.view, callback);
+      templateResource.prepareTemplates(env.view, callback);
    });   
 }
 

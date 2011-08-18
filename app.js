@@ -8,10 +8,10 @@ server = require('mutant/lib/server'),
 util = require('util');
 
 var env = require('./config/environment.json', 'utf-8');
-var db_env = require('./config/' + env.db.resource + '.json', 'utf-8');
+var db_env = require('./config/' + env.resource.db + '.json', 'utf-8');
 
-var resource = require(env.db.resource)(db_env);
-var templateResource = require(env.template.resource)();
+var resource = require('./resource/' + env.resource.db)(db_env);
+var templateResource = require('./resource/' + env.resource.template)();
 
 var router_data = [
    {
@@ -174,7 +174,7 @@ var router_data = [
       }
    },   
    {
-      get: connect.static(__dirname + "/" + env.staticArea)
+      get: connect.static(__dirname + "/" + env.static.area)
    }
 ];
 
@@ -198,7 +198,7 @@ function start(callback) {
    });
    env.app.handler = handler(router);
    resource.open(function(err, db) {
-      templateResource.prepareTemplates(env.view, callback);
+      templateResource.prepareTemplates(__dirname + "/" + env.view.area, env.view.ext, callback);
    });   
 }
 

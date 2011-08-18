@@ -3,19 +3,15 @@
       "hostname": "localhost", 
       "port": "3000"
    },
-   "staticArea": "public",
-   "controllerArea": "controller",
-   "db": {
-      "resource": "./couchdb-resource"
+   "static": {
+      "area": "public"
    },
-   "dataArea": "data",
    "view": {
       "area": "view",
       "ext": ".html"
    },
-   "template": {
-      "resource": "./dust-resource",
-      "area": "repository/template",
-      "ext": ".html"
+   "resource": {
+      "template": "dust",
+      "db": "couchdb"      
    }
 }

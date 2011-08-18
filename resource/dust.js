@@ -17,14 +17,14 @@ module.exports = function (env) {
       dust.onLoad = fn;
    }
    
-   self.prepareTemplates = function (view, callback) {      
-      var folderName = __dirname + "/" + view.area;      
+   self.prepareTemplates = function (folderName, ext, callback) {      
+      console.log(folderName);
       fs.readdir(folderName, function (err, filenames) {
          if (err) {
             throw err;
          }
          var filesRead = 0;
-         var templateName, pattern = new RegExp('\\' + view.ext + '$');
+         var templateName, pattern = new RegExp('\\' + ext + '$');
          filenames.forEach(function (filename) {
             if (pattern.test(filename)) {
                fs.readFile(path.join(folderName, filename), function (err, data) {

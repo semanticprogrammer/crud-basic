@@ -20,7 +20,7 @@
       }
    </script>
    {/page_script}
-   {<title}<title>Posts</title>{/title}
+   {<title}<title>{resourceName} list</title>{/title}
       {<content}
          <div class="page">
             <div class="section">
@@ -39,7 +39,7 @@
                <col id="date"/>
                <col id="content"/>
                <tbody>
-                  {#.}
+                  {#data}
                   <tr>
                      <td>
                         {title}
@@ -57,7 +57,7 @@
                         <a href="#" onclick="deleteResource('{key}')" class="link button">Delete</a>
                      </td>
                   </tr>
-                  {/.}
+                  {/data}
                </tbody>
             </table>
          </div>

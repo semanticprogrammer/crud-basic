@@ -16,35 +16,41 @@
       }
    </script>
    {/page_script}
-{<title}<title>Posts</title>{/title}
-{<content}
-      <div class="border body">
-         <div class="block">
-            <a href="/resource/add/post" class="border link button">Add Post</a>            
+   {<title}<title>{resourceName} list</title>{/title}
+      {<content}
+         <div class="border body">
+            <div class="block">
+               <a href="/resource/add/{resourceName}" class="border link button">Add {resourceName}</a>
+            </div>
+            <table>
+               <thead>
+                  <tr>
+                     <th scope="col">Title</th>
+                     <th scope="col">Date</th>
+                     <th scope="col">Content</th>
+                     <th scope="col"></th>
+                     <th scope="col"></th>
+                  </tr>
+               </thead>
+               <col id="title"/>
+               <col id="date"/>
+               <col id="content"/>
+               <tbody>
+                  {#data}
+                  <tr>
+                     {@idx}{.}{/idx}
+                     <td>
+                        {content}
+                           {"key"}
+                        {title}
+                        {.title}
+                     </td>
+                     <td>
+                        {#content}{key}{/content}
+                     </td>                  
+                  </tr>
+                  {/data}
+               </tbody>
+            </table>
          </div>
-         <table>
-            <thead>
-               <tr>
-                  <th scope="col">Title</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Content</th>
-                  <th scope="col"></th>
-                  <th scope="col"></th>
-               </tr>
-            </thead>
-            <col id="title"/>
-            <col id="date"/>
-            <col id="content"/>
-            <tbody>
-               {#.}
-               <tr>
-                  {@idx}{.}{/idx}
-                  <td>
-                     {.key}
-                  </td>
-               </tr>
-               {/.}
-            </tbody>
-         </table>
-      </div>
-{/content}
+         {/content}

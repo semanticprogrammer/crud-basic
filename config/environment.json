@@ -5,11 +5,8 @@
    },
    "staticArea": "public",
    "controllerArea": "controller",
-   "data": {
-      "resource": "./mongodb-resource",
-      "host": "localhost",
-      "port": "27017",
-      "db": "test"
+   "db": {
+      "resource": "./couchdb-resource"
    },
    "dataArea": "data",
    "view": {

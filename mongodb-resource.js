@@ -9,11 +9,15 @@ module.exports = function (env) {
 
    var db = new Db(env.db, new Server(env.host, env.port, {}));
 
+   self.layer = function() {
+      return 'collection';
+   };
+   
    self.open = function(callback) {
       return db.open(callback);
    };
    
-   self.databaseName = function() {
+   self.dbName = function() {
       return db.databaseName;
    };
    
@@ -49,7 +53,8 @@ module.exports = function (env) {
 
    self.databaseInfo = function(callback) {
       var data = {}, re = new RegExp("^" + db.databaseName + ".");
-      data.databaseName = db.databaseName;
+      data.dbName = db.databaseName;
+      data.layer = self.layer();
       data.collectionNames = [];
       db.collectionNames(function(err, names) {
          names.forEach(function(element) {

@@ -8,8 +8,9 @@ server = require('mutant/lib/server'),
 util = require('util');
 
 var env = require('./config/environment.json', 'utf-8');
+var db_env = require('./config/' + env.db.resource + '.json', 'utf-8');
 
-var resource = require(env.data.resource)(env.data);
+var resource = require(env.db.resource)(db_env);
 var templateResource = require(env.template.resource)();
 
 var router_data = [
@@ -69,7 +70,11 @@ var router_data = [
    {
       pattern: '/resource/add/{name}',
       get: function(req, res) {
-         res.render(req.params.name + '_add');
+         var data = {}; data.name = req.params.name;
+         templateResource.onLoad(function(name, callback) {
+            res.render('add', data);
+         });
+         res.render(req.params.name + '_add', data);
       }
    },
    {
@@ -94,10 +99,14 @@ var router_data = [
                res.end(err.message);
             }
             else {
+               var _data = {};
+               _data.data = data;
+               _data.resourceName = req.params.name;
+               console.log("_data = " + util.inspect(_data));
                templateResource.onLoad(function(name, callback) {
-                  res.render('list', data);
+                  res.render('list', _data);
                });
-               res.render(req.params.name + '_list', data, function(err, out) {
+               res.render(req.params.name + '_list', _data, function(err, out) {
                   if (err) console.log(err.message)
                   else console.log(out);
                });
@@ -122,7 +131,9 @@ var router_data = [
    {  // create resource
       pattern: '/resource/{name}',
       post: function(req, res) {
+         console.log("req.postdata.toString() = " + req.postdata.toString());
          var postData = qs.parse(req.postdata.toString());
+         console.log("postData = " + util.inspect(postData));
          resource.add(req.params.name, postData, function(err, data) {
             if (err) {
                res.end(err.message);
@@ -168,7 +179,7 @@ var router_data = [
 ];
 
 function start(callback) {
-   console.log("Connecting to " + env.data.host + ":" + env.data.port);
+   console.log("Connecting to DB Server: " + db_env.host + ":" + db_env.port);
    router = router(router_data);
    router.use(function(req, res, next) {
       res.render = function (templatename, data) {

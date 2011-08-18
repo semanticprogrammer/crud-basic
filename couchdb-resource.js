@@ -5,13 +5,17 @@ module.exports = function (env) {
 
    var cradle = require('cradle');
    var db = new(cradle.Connection)(env.host, env.port).database(env.db);
+   
+   self.layer = function() {
+      return 'document';
+   };
 
    self.open = function(callback) {
       callback();
    };
    
-   self.databaseName = function() {
-      return db.databaseName;
+   self.dbName = function() {
+      return db.name;
    };
    
    self.collection = function(collectionName, options, callback) {
@@ -45,15 +49,22 @@ module.exports = function (env) {
    };
 
    self.databaseInfo = function(callback) {
-      var data = {}, re = new RegExp("^" + db.databaseName + ".");
-      data.databaseName = db.databaseName;
+      var data = {};
+      data.dbName = db.name;
+      data.layer = self.layer();
       data.collectionNames = [];
-      db.collectionNames(function(err, names) {
-         names.forEach(function(element) {
-            data.collectionNames.push(element.name.replace(re, ""));
+      db.all(function(err, res){
+         res.forEach(function(row1,row2) {
+            db.get(row1, function (err, doc) {
+               if (doc.key) data.collectionNames.push(doc.key)
+               else 
+                  if (doc.name) data.collectionNames.push(doc.name)
+               else 
+                  data.collectionNames.push(doc.id);
+            })
          });
          callback(data)
-      });      
+      })
    };
    
    self.collectionsInfo = function(callback) {

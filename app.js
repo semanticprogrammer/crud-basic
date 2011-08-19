@@ -29,40 +29,43 @@ var router_data = [
       }
    },
    {  // create collection
-      pattern: '/resource/createcollection/{name}',
+      pattern: '/resource/collection',
       post: function(req, res) {
-         resource.createCollection(req.params.name, function(err, collection) {
+         var postData = JSON.parse(req.postdata.toString());
+         resource.createCollection(postData.name, function(err, collection) {
             if (err) {
                res.end(err.message);
             }
             else {
-               res.end("Collection " + req.params.name + " has created successfully!");
+               res.end("Collection " + postData.name + " has created successfully!");
             }            
          })
       }
    },
    {  // delete collection
-      pattern: '/resource/deletecollection/{name}',
+      pattern: '/resource/collection',
       delete: function(req, res) {
-         resource.deleteCollection(req.params.name, function(err) {
+         var postData = JSON.parse(req.postdata.toString());
+         resource.deleteCollection(postData.name, function(err) {
             if (err) {
                res.end(err.message);
             }
             else {
-               res.end("Collection " + req.params.name + " has deleted successfully!");
+               res.end("Collection " + postData.name + " has deleted successfully!");
             }            
          })
       }
    },
    {  // rename collection
-      pattern: '/resource/renamecollection/{from}/{to}',
+      pattern: '/resource/collection',
       put: function(req, res) {
-         resource.renameCollection(req.params.from, req.params.to, function(err) {
+         var postData = JSON.parse(req.postdata.toString());
+         resource.renameCollection(postData.from, postData.to, function(err) {
             if (err) {
                res.end(err.message);
             }
             else {
-               res.end("Collection " + req.params.from + " renamed to " + req.params.to + " successfully!");
+               res.end("Collection " + postData.from + " renamed to " + postData.to + " successfully!");
             }            
          })
       }
@@ -102,7 +105,6 @@ var router_data = [
                var _data = {};
                _data.data = data;
                _data.resourceName = req.params.name;
-               console.log("_data = " + util.inspect(_data));
                templateResource.onLoad(function(name, callback) {
                   res.render('list', _data);
                });
@@ -129,17 +131,17 @@ var router_data = [
       }
    },   
    {  // create resource
-      pattern: '/resource/{name}',
+      pattern: '/resource/item',
       post: function(req, res) {
          console.log("req.postdata.toString() = " + req.postdata.toString());
-         var postData = qs.parse(req.postdata.toString());
+         var postData = JSON.parse(req.postdata.toString());
          console.log("postData = " + util.inspect(postData));
-         resource.add(req.params.name, postData, function(err, data) {
+         resource.add(postData.collection, postData.content, function(err, data) {
             if (err) {
                res.end(err.message);
             }
             else {
-               res.redirect('/resource/list/' + req.params.name);
+               res.end(postData.collection + " created successfully!");
             }
          })
       }
@@ -148,6 +150,7 @@ var router_data = [
       pattern: '/resource/{name}/{key}/{id}',
       put: function(req, res) {
          var postData = JSON.parse(req.postdata.toString());
+         console.log("postData = " + util.inspect(postData));
          var selector = {}; selector[req.params.key] = req.params.id;
          resource.update(req.params.name, selector, postData, function(err, data) {
             if (err) {
@@ -160,19 +163,33 @@ var router_data = [
       }
    },
    {  // delete resource
-      pattern: '/resource/{name}/{key}/{id}',
+      pattern: '/resource/item',
       delete: function(req, res) {
-         var selector = {}; selector[req.params.key] = req.params.id;
-         resource.remove(req.params.name, selector, function(err) {
+         var postData = JSON.parse(req.postdata.toString());
+         console.log("postData = " + util.inspect(postData));
+         resource.remove(postData.name, postData.selector, function(err) {
             if (err) {
                res.end(err.message);
             }
             else {
-               res.end("Resource " + req.params.id + " Deleted Successfully!");
+               res.end("Resource " + JSON.stringify(postData.selector) + " Deleted Successfully!");
             }
          })      
       }
-   },   
+   },
+//   {  // delete resource
+//      pattern: '/resource/{id}',
+//      delete: function(req, res) {
+//         resource.remove(req.params.id, function(err, data) {
+//            if (err) {
+//               res.end(err.message);
+//            }
+//            else {
+//               res.end("Resource " + req.params.id + " Deleted Successfully!");
+//            }
+//         })      
+//      }
+//   },   
    {
       get: connect.static(__dirname + "/" + env.static.area)
    }

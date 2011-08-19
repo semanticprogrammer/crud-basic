@@ -12,6 +12,6 @@
    },
    "resource": {
       "template": "dust",
-      "db": "couchdb"      
+      "db": "mongodb"      
    }
 }

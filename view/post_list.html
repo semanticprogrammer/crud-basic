@@ -6,8 +6,12 @@
    <script type="text/javascript">
       function deleteResource(key) {
          if (window.confirm('Are you sure to delete ' + key + '?')) {
+            var data = {}, selector = {}; selector.key = key;
+            data.name = '{resourceName}';
+            data.selector = selector;
             sps.AJAX.delete({
-               url: '/resource/post/key/' + key,
+               url: '/resource/item',
+               content: data,               
                onSuccess: function(data) {
                   alert(data);
                   window.location.reload(true);

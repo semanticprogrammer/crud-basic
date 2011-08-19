@@ -4,25 +4,31 @@
    <script src="/script/ajax.js" type="text/javascript"></script>
    <script src="/script/dom.js" type="text/javascript"></script>
    <script type="text/javascript">
-      function createCollection() {
-         collectionName = prompt('Enter new collection name:', '');
-         if (collectionName && collectionName.trim().length > 0) {
+      function createResource() {
+         name = prompt('Enter new {entity} name:', '');
+         if (name && name.trim().length > 0) {
+            var data = {};
+            data.name = name.trim();
             sps.AJAX.post({
-               url: '/resource/createcollection/' + collectionName.trim(),
+               url: '/resource/{entity}',
+               content: data,
                onSuccess: function(data) {
                   alert(data);
-                  window.location.reload(true);                  
+                  window.location.reload(true);
                },
                onError: function(data) {
                   alert('Connection with server has failed!')
                }
-            });            
+            });
          }
       };
-      function deleteCollection(collectionName) {
-         if(window.confirm('Are you sure to delete ' + collectionName + '?')) {
+      function deleteResource(name) {
+         if(window.confirm('Are you sure to delete ' + name + '?')) {
+            var data = {};
+            data.name = name;
             sps.AJAX.delete({
-               url: '/resource/deletecollection/' + collectionName,
+               url: '/resource/{entity}',
+               content: data,
                onSuccess: function(data) {
                   alert(data);
                   window.location.reload(true);
@@ -33,11 +39,15 @@
             });            
          }
       };
-      function renameCollection(currentName) {
-         newName = prompt('Enter new name for collection ' + currentName, '');
+      function renameResource(currentName) {
+         newName = prompt('Enter new name for {entity} ' + currentName, '');
          if (newName && newName.trim().length > 0) {
+            var data = {};
+            data.from = currentName;
+            data.to = newName;
             sps.AJAX.put({
-               url: '/resource/renamecollection/' + currentName + '/'+ newName,
+               url: '/resource/{entity}',
+               content: data,
                onSuccess: function(data) {
                   alert(data);
                   window.location.reload(true);
@@ -59,16 +69,16 @@
                <h2 class="inline">{dbName}</h2>
             </header>
             <div class="section">
-               <a href = "#" onClick = "createCollection()" class="border link button">Create new {layer}</a>
+               <a href = "#" onClick = "createResource()" class="border link button">Create new {entity}</a>
             </div>
             <table class="data">
                <thead>
                   <tr>
-                     <th scope="col">{layer}</th>
+                     <th scope="col">{entity}</th>
                      <th scope="col" colspan="2">Action</th>
                   </tr>
                </thead>
-               <col id="collection-name"/>
+               <col id="entity-name"/>
                <col id="actions"/>
                <tbody>
                   <tr>
@@ -78,17 +88,17 @@
                      <td>
                      </td>
                   </tr>
-                  {#collectionNames}
+                  {#entityNames}
                   <tr>
                      <td><a href="/resource/list/{.}">{.}</a></td>
                      <td>
-                        <a href = "#" onClick = "renameCollection('{.}')" class="link button">Rename</a>
+                        <a href = "#" onClick = "renameResource('{.}')" class="link button">Rename</a>
                      </td>
                      <td>
-                        <a href = "#" onClick = "deleteCollection('{.}')" class="link button">Delete</a>
+                        <a href = "#" onClick = "deleteResource('{.}')" class="link button">Delete</a>
                      </td>
                   </tr>
-                  {/collectionNames}
+                  {/entityNames}
                </tbody>
             </table>
          </form>

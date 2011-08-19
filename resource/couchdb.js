@@ -6,7 +6,7 @@ module.exports = function (env) {
    var cradle = require('cradle');
    var db = new(cradle.Connection)(env.host, env.port).database(env.db);
    
-   self.layer = function() {
+   self.entity = function() {
       return 'document';
    };
 
@@ -34,11 +34,11 @@ module.exports = function (env) {
       })
    };   
 
-   self.collectionNames = function(collectionName, callback) {
+   self.entityNames = function(collectionName, callback) {
       return db.collectionNames(collectionName, callback)
    };
    
-   self.collectionShortNames = function(callback) {
+   self.entityShortNames = function(callback) {
       var nameList = [], re = new RegExp("^" + db.databaseName + ".");
       db.collectionNames(function(err, names) {
          names.forEach(function(element) {
@@ -51,16 +51,16 @@ module.exports = function (env) {
    self.databaseInfo = function(callback) {
       var data = {};
       data.dbName = db.name;
-      data.layer = self.layer();
-      data.collectionNames = [];
+      data.entity = self.entity();
+      data.entityNames = [];
       db.all(function(err, res){
          res.forEach(function(row1,row2) {
             db.get(row1, function (err, doc) {
-               if (doc.key) data.collectionNames.push(doc.key)
+               if (doc.key) data.entityNames.push(doc.key)
                else 
-                  if (doc.name) data.collectionNames.push(doc.name)
+                  if (doc.name) data.entityNames.push(doc.name)
                else 
-                  data.collectionNames.push(doc.id);
+                  data.entityNames.push(doc.id);
             })
          });
          callback(data)
@@ -134,17 +134,8 @@ module.exports = function (env) {
       })
    };
 
-   self.remove = function(collectionName, selector, callback) {
-      db.collection(collectionName, function(err, collection) {
-         if (err) {
-            callback(err);
-         }
-         else {
-            collection.remove(selector, function(err) {
-               callback(err);
-            });
-         }
-      })
+   self.remove = function(id, callback) {
+      db.remove(id, callback)
    };
 
    self.renameCollection = function(fromCollection, toCollection, callback) {

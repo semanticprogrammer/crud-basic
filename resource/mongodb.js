@@ -9,7 +9,7 @@ module.exports = function (env) {
 
    var db = new Db(env.db, new Server(env.host, env.port, {}));
 
-   self.layer = function() {
+   self.entity = function() {
       return 'collection';
    };
    
@@ -37,11 +37,11 @@ module.exports = function (env) {
       })
    };   
 
-   self.collectionNames = function(collectionName, callback) {
+   self.entityNames = function(collectionName, callback) {
       return db.collectionNames(collectionName, callback)
    };
    
-   self.collectionShortNames = function(callback) {
+   self.entityShortNames = function(callback) {
       var nameList = [], re = new RegExp("^" + db.databaseName + ".");
       db.collectionNames(function(err, names) {
          names.forEach(function(element) {
@@ -54,11 +54,11 @@ module.exports = function (env) {
    self.databaseInfo = function(callback) {
       var data = {}, re = new RegExp("^" + db.databaseName + ".");
       data.dbName = db.databaseName;
-      data.layer = self.layer();
-      data.collectionNames = [];
+      data.entity = self.entity();
+      data.entityNames = [];
       db.collectionNames(function(err, names) {
          names.forEach(function(element) {
-            data.collectionNames.push(element.name.replace(re, ""));
+            data.entityNames.push(element.name.replace(re, ""));
          });
          callback(data)
       });      
@@ -145,7 +145,7 @@ module.exports = function (env) {
 
    self.remove = function(collectionName, selector, callback) {
       db.collection(collectionName, function(err, collection) {
-         if (err) {
+         if (err) {            
             callback(err);
          }
          else {

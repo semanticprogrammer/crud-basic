@@ -5,19 +5,19 @@
    <script src="/script/dom.js" type="text/javascript"></script>
    <script type="text/javascript">
       function createResource(url) {
-         alert(document.getElementById("content").value);
-         var content = JSON.parse(document.getElementById("content").value);
-         alert(content);
+         var data = {};
+         data.collection = "{name}";
+         data.content = JSON.parse(document.getElementById("content").value);
          sps.AJAX.post({
             url: url,
-            content: content,
+            content: data,
             onSuccess: function(data) {
                alert(data);
                window.location = "/resource/list/{name}"
             },
             onError: function(data) {alert('Problem!')}
          });
-      };
+      };      
    </script>
    {/page_script}
 {<content}
@@ -27,7 +27,7 @@
             <h3>Create {name}</h3>
          </header>
          <textarea id="content" rows="7" colums="64" wrap="soft"></textarea>
-         <button onclick="createResource('/resource/{name}')" type="button">>Create</button>
+         <button onclick="createResource('/resource/item')" type="button">>Create</button>
       </form>
    </div>
    {/content}

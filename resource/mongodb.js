@@ -149,8 +149,8 @@ module.exports = function (env) {
             callback(err);
          }
          else {
-            collection.remove(selector, function(err) {
-               callback(err);
+            collection.remove(selector, function() {
+               callback();
             });
          }
       })

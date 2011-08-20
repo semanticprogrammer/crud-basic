@@ -4,15 +4,23 @@
    <script src="/script/ajax.js" type="text/javascript"></script>
    <script src="/script/dom.js" type="text/javascript"></script>
    <script type="text/javascript">
-      function removePost(url) {
-         if(!window.confirm('Are you sure?')) return false;
-         sps.AJAX.delete({url: url,
-            onSuccess: function(data) {
-               alert('Deleted Successful!')
-            },
-            onError: function(data) {alert('Problem!')}
-         });
-         return true;
+      function deleteResource(key) {
+         if (window.confirm('Are you sure to delete ' + key + '?')) {
+            var data = {}, selector = {}; selector.key = key;
+            data.name = '{resourceName}';
+            data.selector = selector;
+            sps.AJAX.delete({
+               url: '/resource/item',
+               content: data,               
+               onSuccess: function(data) {
+                  alert(data);
+                  window.location.reload(true);
+               },
+               onError: function(data) {
+                  alert('Connection with server has failed!')
+               }
+            });            
+         }
       }
    </script>
    {/page_script}
@@ -25,11 +33,9 @@
             <table>
                <thead>
                   <tr>
-                     <th scope="col">Title</th>
-                     <th scope="col">Date</th>
+                     <th scope="col">ID</th>
                      <th scope="col">Content</th>
-                     <th scope="col"></th>
-                     <th scope="col"></th>
+                     <th scope="col" colspan="2">Action</th>
                   </tr>
                </thead>
                <col id="title"/>
@@ -38,16 +44,18 @@
                <tbody>
                   {#data}
                   <tr>
-                     {@idx}{.}{/idx}
                      <td>
-                        {content}
-                           {"key"}
-                        {title}
-                        {.title}
+                        {_id}
+                     </td>                     
+                     <td>
+                        {#forEachAttr}{~n}{value}{/forEachAttr}
                      </td>
                      <td>
-                        {#content}{key}{/content}
-                     </td>                  
+                        <a href="/resource/edit/{resourceName}/key/{key}" class="link button">Edit</a>
+                     </td>   
+                     <td>
+                        <a href="#" onclick="deleteResource('{key}')" class="link button">Delete</a>
+                     </td>                     
                   </tr>
                   {/data}
                </tbody>

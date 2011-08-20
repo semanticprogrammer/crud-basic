@@ -133,9 +133,7 @@ var router_data = [
    {  // create resource
       pattern: '/resource/item',
       post: function(req, res) {
-         console.log("req.postdata.toString() = " + req.postdata.toString());
          var postData = JSON.parse(req.postdata.toString());
-         console.log("postData = " + util.inspect(postData));
          resource.add(postData.collection, postData.content, function(err, data) {
             if (err) {
                res.end(err.message);
@@ -147,12 +145,10 @@ var router_data = [
       }
    },
    {  // update resource
-      pattern: '/resource/{name}/{key}/{id}',
+      pattern: '/resource/item',
       put: function(req, res) {
          var postData = JSON.parse(req.postdata.toString());
-         console.log("postData = " + util.inspect(postData));
-         var selector = {}; selector[req.params.key] = req.params.id;
-         resource.update(req.params.name, selector, postData, function(err, data) {
+         resource.update(postData.name, postData.selector, postData.content, function(err, data) {
             if (err) {
                res.end(err.message);
             }
@@ -166,7 +162,6 @@ var router_data = [
       pattern: '/resource/item',
       delete: function(req, res) {
          var postData = JSON.parse(req.postdata.toString());
-         console.log("postData = " + util.inspect(postData));
          resource.remove(postData.name, postData.selector, function(err) {
             if (err) {
                res.end(err.message);

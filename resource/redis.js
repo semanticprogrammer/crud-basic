@@ -1,17 +1,14 @@
 module.exports = function (env) {
-   var mysql = require('mysql'),
+   var mysql = require('redis'),
    self = {};
 
-   var client = mysql.createClient({
+   var client = redis.createClient({
       host: env.host,
-      port: env.port,
-      user: env.user,
-      password: env.password,
-      database: env.db
+      port: env.port
    });
 
    self.entity = function() {
-      return 'table';
+      return 'set';
    };
    
    self.open = function(callback) {

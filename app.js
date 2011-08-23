@@ -28,20 +28,34 @@ var router_data = [
          });
       }
    },
-   {  // create collection
-      pattern: '/resource/collection',
+//   {  // create collection
+//      pattern: '/resource/collection',
+//      post: function(req, res) {
+//         var postData = JSON.parse(req.postdata.toString());
+//         resource.createCollection(postData.name, function(err, collection) {
+//            if (err) {
+//               res.end(err.message);
+//            }
+//            else {
+//               res.end("Collection " + postData.name + " has created successfully!");
+//            }            
+//         })
+//      }
+//   },
+   {  // create document
+      pattern: '/resource/{entity}',
       post: function(req, res) {
          var postData = JSON.parse(req.postdata.toString());
-         resource.createCollection(postData.name, function(err, collection) {
+         resource['create_'+ req.params.entity](postData.name, postData.obj, function(err, collection) {
             if (err) {
                res.end(err.message);
             }
             else {
-               res.end("Collection " + postData.name + " has created successfully!");
+               res.end(req.params.entity + ' ' + postData.name + ' has created successfully!');
             }            
          })
       }
-   },
+   },   
    {  // delete collection
       pattern: '/resource/collection',
       delete: function(req, res) {

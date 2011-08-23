@@ -9,6 +9,7 @@
          if (name && name.trim().length > 0) {
             var data = {};
             data.name = name.trim();
+            data.obj = {};
             sps.AJAX.post({
                url: '/resource/{entity}',
                content: data,

@@ -22,8 +22,13 @@ module.exports = function (env) {
       return db.collection(collectionName, options, callback)
    };
    
-   self.createCollection = function(collectionName, callback) {
-      db.save(collectionName, callback);
+   self.create_document = function(id, obj, callback) {
+      obj = obj || id;
+      if (arguments.length == 3) {
+         db.save(id, obj, callback);
+      }
+      else 
+         db.save(obj, callback);
    };
    
    self.deleteCollection = function(collectionName, callback) {
@@ -58,9 +63,9 @@ module.exports = function (env) {
             db.get(row1, function (err, doc) {
                if (doc.key) data.entityNames.push(doc.key)
                else 
-                  if (doc.name) data.entityNames.push(doc.name)
+               if (doc.name) data.entityNames.push(doc.name)
                else 
-                  data.entityNames.push(doc.id);
+                  data.entityNames.push(doc._id);
             })
          });
          callback(data)

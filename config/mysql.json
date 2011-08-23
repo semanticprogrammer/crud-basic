@@ -1,0 +1,7 @@
+{
+   "host": "bsdserver",
+   "port": "3306",
+   "user": "myuser",
+   "password": "mypassword",   
+   "db": "test"
+}

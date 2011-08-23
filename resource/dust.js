@@ -40,6 +40,7 @@ module.exports = function (env) {
                   }
                });
             }
+            else filesRead += 1;
          });
       });
    };   

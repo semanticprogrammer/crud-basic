@@ -106,6 +106,7 @@ var router_data = [
                _data.data = data;
                _data.resourceName = req.params.name;
                templateResource.onLoad(function(name, callback) {
+                  _data.forEachAttr = templateResource.forEachAttr;
                   res.render('list', _data);
                });
                res.render(req.params.name + '_list', _data, function(err, out) {

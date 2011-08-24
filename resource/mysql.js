@@ -26,8 +26,8 @@ module.exports = function (env) {
       return db.collection(collectionName, options, callback)
    };
    
-   self.createCollection = function(collectionName, callback) {
-      return db.createCollection(unescape(collectionName), callback)
+   self.create_table = function(name, callback) {
+      return client.query('CREATE TABLE' + unescape(name), callback)
    };
    
    self.deleteCollection = function(collectionName, callback) {
@@ -53,13 +53,14 @@ module.exports = function (env) {
    };
 
    self.databaseInfo = function(callback) {
-      var data = {}, propName = 'Tables_in_' + client.database;
+      var data = {}, prop;
       data.dbName = client.database;
       data.entity = self.entity();
       data.entityNames = [];
       client.query("SHOW TABLES", function(err, names) {
          names.forEach(function(element) {
-            data.entityNames.push(element[propName]);
+            if (!prop) prop = Object.keys(element)[0];
+            data.entityNames.push(element[prop]);
          });
          callback(data)
       });      

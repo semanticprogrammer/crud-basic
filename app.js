@@ -28,21 +28,7 @@ var router_data = [
          });
       }
    },
-//   {  // create collection
-//      pattern: '/resource/collection',
-//      post: function(req, res) {
-//         var postData = JSON.parse(req.postdata.toString());
-//         resource.createCollection(postData.name, function(err, collection) {
-//            if (err) {
-//               res.end(err.message);
-//            }
-//            else {
-//               res.end("Collection " + postData.name + " has created successfully!");
-//            }            
-//         })
-//      }
-//   },
-   {  // create document
+   {  // create entity
       pattern: '/resource/{entity}',
       post: function(req, res) {
          var postData = JSON.parse(req.postdata.toString());

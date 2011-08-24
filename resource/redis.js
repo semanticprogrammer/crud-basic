@@ -23,8 +23,8 @@ module.exports = function (env) {
       return db.collection(collectionName, options, callback)
    };
    
-   self.createCollection = function(collectionName, callback) {
-      return db.createCollection(unescape(collectionName), callback)
+   self.create_set = function(name, callback) {
+      return client.create(unescape(name), callback)
    };
    
    self.deleteCollection = function(collectionName, callback) {

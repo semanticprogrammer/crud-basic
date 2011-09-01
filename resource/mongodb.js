@@ -2,90 +2,163 @@ module.exports = function (env) {
    var 
    util = require('util'),
    self = {};
+   self.database = {};
+   self.collection = {};
+   self.collection.model = {};
+   self.collection.get = {};
+   self.item = {};
+   self.item.model = {};
+   self.item.get = {};
 
    var Db = require('mongodb').Db,
    Connection = require('mongodb').Connection,
    Server = require('mongodb').Server;
 
-   var db = new Db(env.db, new Server(env.host, env.port, {}));
+   var client = new Db(env.db, new Server(env.host, env.port, {}));
 
    self.entity = function() {
       return 'collection';
-   };
+   }
    
    self.open = function(callback) {
-      return db.open(callback);
-   };
+      client.open(function(error, client) {
+         if (error) {
+            callback(error)
+         }
+         else {
+            if (env.user && env.password) {
+               client.authenticate(env.user, env.password, function(err, replies) {
+                  if (err) {
+                     callback(err)
+                  }
+                  else callback(null, replies);
+               })               
+            }
+            else {
+               callback(null, client);
+            }            
+         }
+      })
+   }
    
-   self.dbName = function() {
-      return db.databaseName;
-   };
+   //   self.collection = function(collectionName, options, callback) {
+   //      return client.collection(collectionName, options, callback)
+   //   };
    
-   self.collection = function(collectionName, options, callback) {
-      return db.collection(collectionName, options, callback)
-   };
+   self.collection.model.create = function() {
+      return {
+         collection : {
+            name: ''
+         }
+      }
+   }
    
-   self.create_collection = function(collectionName, options, callback) {
-      return db.createCollection(unescape(collectionName), callback)
-   };
+   self.collection.get.create = function(name, callback) {
+      console.log("collection.get.create = " + util.inspect(name));
+      var data = {};
+      data.entity = self.entity();
+//      data.name = name;
+      data.content = {};
+      data.content = self.collection.model.create();
+      callback(data)
+   }
    
-   self.deleteCollection = function(collectionName, callback) {
-      db.collection(collectionName, function(err, collection) {
+   self.collection.model.update = function() {
+      return {
+         collection : {
+            from: '',
+            to: ''
+         }
+      }
+   }
+   
+   self.collection.get.update = function(from, callback) {
+      var data = {};
+      data.entity = self.entity();
+      data.name = from;
+      data.content = {};
+      data.content = self.collection.model.update();
+      data.content.collection.from = from;
+      callback(data)
+   }   
+   
+   self.collection.create = function(data, callback) {
+      return client.createCollection(unescape(data.content.name), callback)
+   }
+   
+   self.collection['delete'] = function(data, callback) {
+      client.collection(data.selector, function(err, collection) {
          collection.drop(function(err) {
             callback(err)
          })
       })
-   };   
+   }
 
-   self.entityNames = function(collectionName, callback) {
-      return db.collectionNames(collectionName, callback)
-   };
+   self.collection.update = function(data, callback) {
+      return client.renameCollection(unescape(data.from), unescape(data.to), callback)
+   }
    
-   self.entityShortNames = function(callback) {
-      var nameList = [], re = new RegExp("^" + db.databaseName + ".");
-      db.collectionNames(function(err, names) {
+   self.collection.names = function(name, callback) {
+      return client.collectionNames(name, callback)
+   }
+   
+   self.collection.shortNames = function(callback) {
+      var nameList = [], re = new RegExp("^" + client.databaseName + ".");
+      client.collectionNames(function(err, names) {
          names.forEach(function(element) {
             nameList.push(element.name.replace(re, ""));
          });
          callback(nameList)
-      });      
-   };
-
-   self.databaseInfo = function(callback) {
-      var data = {}, re = new RegExp("^" + db.databaseName + ".");
-      data.dbName = db.databaseName;
+      });
+   }
+   
+   self.database.name = function() {
+      return client.databaseName;
+   }
+   
+   self.database.info = function(callback) {
+      var data = {}, re = new RegExp("^" + client.databaseName + ".");
+      data.dbName = client.databaseName;
       data.entity = self.entity();
       data.entityNames = [];
-      db.collectionNames(function(err, names) {
+      client.collectionNames(function(err, names) {
          names.forEach(function(element) {
             data.entityNames.push(element.name.replace(re, ""));
          });
          callback(data)
       });      
-   };
+   }
+   
+   self.database.lastStatus = function(callback) {
+      return client.lastStatus(callback)
+   }
+   
+   self.database.drop = function(callback) {
+      return client.dropDatabase(callback)
+   }   
    
    self.collectionsInfo = function(callback) {
-      db.collectionsInfo(function(err, cursor) {
+      client.collectionsInfo(function(err, cursor) {
          cursor.toArray(function(err, items) {
             callback(items);
          });
       })   
-   };
+   }
 
    self.collectionInfo = function(collectionName, callback) {
-      db.collectionsInfo(collectionName, function(err, cursor) {
+      client.collectionsInfo(collectionName, function(err, cursor) {
          cursor.toArray(function(err, items) {
             callback(items);        
          });
       })
-   };
+   }
 
    self.list = function(collectionName, callback) {
-      db.collection(collectionName, function(err, collection) {
+      client.collection(collectionName, function(err, collection) {
          if (err) {
-            console.log("!!!!!!!!! db is ...." + util.inspect(db));
+            console.log("!!!!!!!!! db is ...." + util.inspect(client));
             console.log("!!!!!!!!! err is ...." + util.inspect(err));
-            console.log("!!!!!!!!! db state is ...." + util.inspect(db.state));
+            console.log("!!!!!!!!! db state is ...." + util.inspect(client.state));
             callback(err, false);
          }
          else {
@@ -94,10 +167,10 @@ module.exports = function (env) {
             });
          }
       })
-   };
+   }
 
    self.find = function(collectionName, selector, callback) {
-      db.collection(collectionName, function(err, collection) {
+      client.collection(collectionName, function(err, collection) {
          if (err) {
             callback(err);
          }
@@ -109,15 +182,33 @@ module.exports = function (env) {
             });
          }
       })
-   };
+   }
 
-   self.add = function(collectionName, postData, callback) {
-      db.collection(collectionName, function(err, collection) {
+   self.item.model.create = function() {
+      return {
+         item : {
+            json: {}
+         }
+      }
+   }
+   
+   self.item.get.create = function(name, callback) {
+      var data = {};
+      data.entity = 'item';
+      data.name = name;
+      data.content = {};
+      data.content = self.item.model.create();
+      callback(data)
+   }
+   
+   self.item.create = function(data, callback) {
+      client.collection(data.name, function(err, collection) {
          if (err) {
             callback(err);
          }
          else {
-            collection.insert(postData, {
+            data.content.json = JSON.parse(data.content.json);
+            collection.insert(data.content.json, {
                safe:true
             }, function(err, object) {
                if (err) callback(err)
@@ -125,10 +216,10 @@ module.exports = function (env) {
             });
          }
       })
-   };
-
-   self.update = function(collectionName, selector, postData, callback) {
-      db.collection(collectionName, function(err, collection) {
+   }
+   
+   self.item.update = function(collectionName, selector, postData, callback) {
+      client.collection(collectionName, function(err, collection) {
          if (err) {
             callback(err);
          }
@@ -141,24 +232,19 @@ module.exports = function (env) {
             });
          }
       })
-   };
-
-   self.remove = function(collectionName, selector, callback) {
-      db.collection(collectionName, function(err, collection) {
-         if (err) {            
+   }
+   
+   self.item['delete'] = function(data, callback) {      
+      client.collection(data.name, function(err, collection) {
+         if (err) {
             callback(err);
          }
          else {
-            collection.remove(selector, function() {
+            collection.remove(data.selector, function() {
                callback();
             });
          }
       })
    };
-
-   self.renameCollection = function(fromCollection, toCollection, callback) {
-      return db.renameCollection(unescape(fromCollection), unescape(toCollection), callback)
-   };
-   
    return self;
 }

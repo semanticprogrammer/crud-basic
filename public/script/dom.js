@@ -414,6 +414,9 @@ var sps = (function(use) {
                case "checkbox":
                   field = document.createElement("input");
                   break;
+               case "textarea":
+                  field = document.createElement("textarea");
+                  break;
                default :
                   field = document.createElement("input");
             }
@@ -476,12 +479,17 @@ var sps = (function(use) {
             }
             else
             if (use.isObject(value)) {
-               fieldset = document.createElement("fieldset");
-               legend = document.createElement("legend");
-               legend.appendChild(document.createTextNode(property));
-               fieldset.appendChild(legend);
-               createFields(value, fieldset);
-               li.appendChild(fieldset);
+               if (Object.keys(value).length == 0) {
+                  createField(property, '{}', 'textarea', li);
+               }
+               else {
+                  fieldset = document.createElement("fieldset");
+                  legend = document.createElement("legend");
+                  legend.appendChild(document.createTextNode(property));
+                  fieldset.appendChild(legend);
+                  createFields(value, fieldset);
+                  li.appendChild(fieldset);             
+               }
             }
             else {
                if (use.isBoolean(value)) {

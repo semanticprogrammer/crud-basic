@@ -34,7 +34,7 @@ var sps = (function(use) {
          self.sendRequest("PUT", args);
       };
 
-      self.delete = function(args) {
+      self['delete'] = function(args) {
          self.sendRequest("DELETE", args);
       };
       self.sendRequest = function(method, args) {

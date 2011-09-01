@@ -8,19 +8,19 @@ module.exports = function (env) {
    
    self.entity = function() {
       return 'document';
-   };
+   }
 
    self.open = function(callback) {
       callback();
-   };
+   }
    
    self.dbName = function() {
       return db.name;
-   };
+   }
    
    self.collection = function(collectionName, options, callback) {
       return db.collection(collectionName, options, callback)
-   };
+   }
    
    self.create_document = function(id, obj, callback) {
       obj = obj || id;
@@ -29,7 +29,7 @@ module.exports = function (env) {
       }
       else 
          db.save(obj, callback);
-   };
+   }
    
    self.deleteCollection = function(collectionName, callback) {
       db.collection(collectionName, function(err, collection) {
@@ -37,11 +37,11 @@ module.exports = function (env) {
             callback(err)
          })
       })
-   };   
+   }   
 
    self.entityNames = function(collectionName, callback) {
       return db.collectionNames(collectionName, callback)
-   };
+   }
    
    self.entityShortNames = function(callback) {
       var nameList = [], re = new RegExp("^" + db.databaseName + ".");
@@ -51,7 +51,7 @@ module.exports = function (env) {
          });
          callback(nameList)
       });      
-   };
+   }
 
    self.databaseInfo = function(callback) {
       var data = {};
@@ -70,7 +70,7 @@ module.exports = function (env) {
          });
          callback(data)
       })
-   };
+   }
    
    self.collectionsInfo = function(callback) {
       db.collectionsInfo(function(err, cursor) {
@@ -78,7 +78,7 @@ module.exports = function (env) {
             callback(items);
          });
       })   
-   };
+   }
 
    self.collectionInfo = function(collectionName, callback) {
       db.collectionsInfo(collectionName, function(err, cursor) {
@@ -86,7 +86,7 @@ module.exports = function (env) {
             callback(items);        
          });
       })
-   };
+   }
 
    self.list = function(collectionName, callback) {
       db.collection(collectionName, function(err, collection) {
@@ -102,7 +102,7 @@ module.exports = function (env) {
             });
          }
       })
-   };
+   }
 
    self.find = function(collectionName, selector, callback) {
       db.collection(collectionName, function(err, collection) {
@@ -117,11 +117,11 @@ module.exports = function (env) {
             });
          }
       })
-   };
+   }
 
    self.add = function(collectionName, postData, callback) {
       db.save(collectionName, postData, callback);
-   };
+   }
 
    self.update = function(collectionName, selector, postData, callback) {
       db.collection(collectionName, function(err, collection) {
@@ -137,15 +137,15 @@ module.exports = function (env) {
             });
          }
       })
-   };
+   }
 
    self.remove = function(id, callback) {
       db.remove(id, callback)
-   };
+   }
 
    self.renameCollection = function(fromCollection, toCollection, callback) {
       return db.renameCollection(unescape(fromCollection), unescape(toCollection), callback)
-   };
+   }
    
    return self;
 }

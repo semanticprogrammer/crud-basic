@@ -4,28 +4,29 @@
    <script src="/script/ajax.js" type="text/javascript"></script>
    <script src="/script/dom.js" type="text/javascript"></script>
    <script type="text/javascript">
-      function updatePost(key) {
+      function updateResource(key) {
          var data = {}, selector = {}; selector.key = key;
          data.name = 'post';
          data.selector = selector;
          data.content = sps.Controls.toObject();
          sps.AJAX.put({
             url: '/resource/item',
+            handleAs: 'json',
             content: data,
             onSuccess: function(data) {
-               alert(data);
+               alert(data.message);
                window.location = "/resource/list/post"
             },
             onError: function(data) {alert('Problem!')}
          });
-      };
+      };     
    </script>
    {/page_script}
    {<content}
       <div class="page">
          <form action="/resource/post/key/{.key}" method="put">
             <header>
-               <h3>Edit Post</h3>
+               <h3>Update Post</h3>
             </header>
             <label for="key">Key:</label>
             <input id="key" name="key" type="text" value="{.key}" readonly/>
@@ -34,7 +35,7 @@
             <label for="date">Date:</label>
             <input id="date" name="date" type="text" value="{.date}"/>
             <textarea name="content" rows="3" colums="20" max-length="140" wrap="soft">{.content}</textarea>       
-            <button onclick="updatePost('{.key}')" type="button">Save</button>
+            <button onclick="updateResource('{.key}')" type="button">Save</button>
          </form>
       </div>
       {/content}

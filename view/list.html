@@ -7,13 +7,14 @@
       function deleteResource(key) {
          if (window.confirm('Are you sure to delete ' + key + '?')) {
             var data = {}, selector = {}; selector.key = key;
-            data.name = '{resourceName}';
+            data.name = '{name}';
             data.selector = selector;
             sps.AJAX.delete({
                url: '/resource/item',
+               handleAs: 'json',
                content: data,               
                onSuccess: function(data) {
-                  alert(data);
+                  alert(data.message);
                   window.location.reload(true);
                },
                onError: function(data) {
@@ -28,7 +29,7 @@
       {<content}
          <div class="border body">
             <div class="block">
-               <a href="/resource/item/create/{resourceName}" class="border link button">Add {resourceName}</a>
+               <a href="/resource/item/create/{name}" class="border link button">Add {name}</a>
             </div>
             <table>
                <thead>
@@ -51,7 +52,7 @@
                         {#forEachAttr}{~n}{key}: {value}{/forEachAttr}
                      </td>
                      <td>
-                        <a href="/resource/edit/{resourceName}/key/{key}" class="link button">Edit</a>
+                        <a href="/resource/edit/{name}/key/{key}" class="link button">Edit</a>
                      </td>   
                      <td>
                         <a href="#" onclick="deleteResource('{key}')" class="link button">Delete</a>

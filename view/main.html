@@ -10,9 +10,10 @@
             data.selector = name;
             sps.AJAX.delete({
                url: '/resource/{entity}',
+               handleAs: 'json',
                content: data,
                onSuccess: function(data) {
-                  alert(data);
+                  alert(data.message);
                   window.location.reload(true);
                },
                onError: function(data) {

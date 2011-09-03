@@ -54,10 +54,9 @@ module.exports = function (env) {
    }
    
    self.collection.get.create = function(name, callback) {
-      console.log("collection.get.create = " + util.inspect(name));
       var data = {};
       data.entity = self.entity();
-//      data.name = name;
+      //      data.name = name;
       data.content = {};
       data.content = self.collection.model.create();
       callback(data)
@@ -83,19 +82,46 @@ module.exports = function (env) {
    }   
    
    self.collection.create = function(data, callback) {
-      return client.createCollection(unescape(data.content.name), callback)
+      client.createCollection(unescape(data.content.name), function(err, collection) {
+         var _data = {};
+         if (err) {
+            _data.message = err.message;
+         }
+         else {
+            _data.url = '/';
+            _data.message = 'Collection ' + collection.collectionName + ' has created successfully!';
+         }
+         callback(_data)
+      });
    }
    
    self.collection['delete'] = function(data, callback) {
       client.collection(data.selector, function(err, collection) {
          collection.drop(function(err) {
-            callback(err)
+            var _data = {};
+            if (err) {
+               _data.message = err.message;
+            }
+            else {
+               _data.message = 'Collection ' + data.selector + ' has deleted successfully!';
+            }            
+            callback(_data)
          })
       })
    }
 
    self.collection.update = function(data, callback) {
-      return client.renameCollection(unescape(data.from), unescape(data.to), callback)
+      client.renameCollection(unescape(data.from), unescape(data.to), function(err, reply) {
+         var _data = {};
+         if (err) {
+            _data.message = err.message;
+         }
+         else {
+            _data.url = '/';
+            _data.message = 'Collection ' + data.from + " renamed to " + data.to + " successfully!";
+         }
+         callback(_data)
+      });
    }
    
    self.collection.names = function(name, callback) {
@@ -153,18 +179,24 @@ module.exports = function (env) {
       })
    }
 
-   self.list = function(collectionName, callback) {
-      client.collection(collectionName, function(err, collection) {
+   self.list = function(name, callback) {
+      client.collection(name, function(err, collection) {
+         var _data = {};
          if (err) {
-            console.log("!!!!!!!!! db is ...." + util.inspect(client));
-            console.log("!!!!!!!!! err is ...." + util.inspect(err));
-            console.log("!!!!!!!!! db state is ...." + util.inspect(client.state));
-            callback(err, false);
+            _data.message = err.message;
+            callback(_data);
          }
          else {
             collection.find().toArray(function(err, docs) {
-               callback(err, docs);
-            });
+               if (err) {
+                  _data.message = err.message;
+               }
+               else {
+                  _data.data = docs;
+                  _data.name = name;
+               }
+               callback(_data);
+            })
          }
       })
    }
@@ -207,28 +239,44 @@ module.exports = function (env) {
             callback(err);
          }
          else {
-            data.content.json = JSON.parse(data.content.json);
-            collection.insert(data.content.json, {
+            if (data.content.json) {
+               data.content = JSON.parse(data.content.json);
+            }
+            collection.insert(data.content, {
                safe:true
-            }, function(err, object) {
-               if (err) callback(err)
-               else callback(err, object);
+            }, function(err, object) {               
+               var _data = {};
+               if (err) {
+                  _data.message = err.message;
+               }
+               else {
+                  _data.url = '/resource/list/' + collection.collectionName;
+                  _data.message = 'Item ' + collection.collectionName + ' has created successfully!';
+               }
+               callback(_data)
             });
          }
       })
    }
    
-   self.item.update = function(collectionName, selector, postData, callback) {
-      client.collection(collectionName, function(err, collection) {
+   self.item.update = function(data, callback) {
+      client.collection(data.name, function(err, collection) {
+         var _data = {};
          if (err) {
-            callback(err);
+            _data.message = err.message;
+            callback(_data);
          }
          else {
-            collection.findAndModify(selector, [], {
-               $set: postData
+            collection.findAndModify(data.selector, [], {
+               $set: data.content
             }, {}, function(err, object) {
-               if (err) callback(err)
-               else callback(err, object);
+               if (err) _data.message = err.message
+               else {
+                  _data.url = '/resource/list/' + collection.collectionName;
+                  _data.message = collection.collectionName + ' ' + 
+                  JSON.stringify(data.selector) + ' has updated successfully!';                  
+               }
+               callback(_data);
             });
          }
       })
@@ -236,12 +284,20 @@ module.exports = function (env) {
    
    self.item['delete'] = function(data, callback) {      
       client.collection(data.name, function(err, collection) {
+         var _data = {};
          if (err) {
-            callback(err);
+            _data.message = err.message;
+            callback(_data);
          }
          else {
             collection.remove(data.selector, function() {
-               callback();
+               if (err) {
+                  _data.message = err.message
+               }
+               else {
+                  _data.message = data.name + ' ' + JSON.stringify(data.selector) + ' has deleted successfully!';           
+               }               
+               callback(_data);
             });
          }
       })

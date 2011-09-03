@@ -49,19 +49,11 @@ var router_data = [
    pattern: '/resource/{entity}',
    post: function(req, res) {
       var postData = JSON.parse(req.postdata.toString());
-      resource[req.params.entity].create(postData, function(err, collection) {
-         var data = {};
-         if (err) {
-            data.message = err.message;
-         }
-         else {
-            data.url = '/main';
-            data.message = req.params.entity + ' ' + (postData.content.name || '') + ' has created successfully!';
-         }
+      resource[req.params.entity].create(postData, function(data) {
          res.end(JSON.stringify(data));
       })
    }
-},   
+},
 {
    pattern: '/resource/update/{entity}/{selector}',
    get: function(req, res) {
@@ -83,15 +75,7 @@ var router_data = [
    pattern: '/resource/{entity}',
    put: function(req, res) {
       var postData = JSON.parse(req.postdata.toString());
-      resource[req.params.entity].update(postData, function(err) {
-         var data = {};
-         if (err) {
-            data.message = err.message;
-         }
-         else {
-            data.url = '/main';
-            data.message = req.params.entity + ' ' + postData.from + " renamed to " + postData.to + " successfully!";
-         }
+      resource[req.params.entity].update(postData, function(data) {
          res.end(JSON.stringify(data));
       })
    }
@@ -100,76 +84,37 @@ var router_data = [
    pattern: '/resource/{entity}',
    'delete': function(req, res) {
       var postData = JSON.parse(req.postdata.toString());
-      resource[req.params.entity]['delete'](postData, function(err) {
-         if (err) {
-            res.end(err.message);
-         }
-         else {
-            if (typeof postData.selector == "object") {
-               res.end(req.params.entity + ' ' + JSON.stringify(postData.selector) + ' has deleted successfully!');
-            }
-            else {
-               res.end(req.params.entity + ' ' + postData.selector + ' has deleted successfully!');
-            }            
-         }            
+      resource[req.params.entity]['delete'](postData, function(data) {
+         res.end(JSON.stringify(data));
       })
-   }
-},
-{
-   pattern: '/resource/add/{name}',
-   get: function(req, res) {
-      var data = {};      
-      data.name = req.params.name;
-      templateResource.onLoad(function(name, callback) {
-         res.render('add', data);
-      });
-      res.render(req.params.name + '_add', data);
-   }
-},
-{
-   pattern: '/resource/edit/{name}/{key}/{id}',
-   get: function(req, res) {
-      var selector = {};      
-      selector[req.params.key] = req.params.id;
-      resource.find(req.params.name, selector, function(err, data) {
-         if (err) {
-            res.end(err.message);
-         }
-         else {
-            res.render(req.params.name + '_edit', data);
-         }
-      });
    }
 },
 {  // resource list
    pattern: '/resource/list/{name}',
    get: function(req, res) {
-      resource.list(req.params.name, function(err, data) {
-         if (err) {
-            res.end(err.message);
-         }
-         else {
-            var _data = {};
-            _data.data = data;
-            _data.resourceName = req.params.name;
-            templateResource.onLoad(function(name, callback) {
-               _data.forEachAttr = templateResource.forEachAttr;
-               res.render('list', _data);
-            });
-            res.render(req.params.name + '_list', _data, function(err, out) {
-               if (err) console.log(err.message)
-               else console.log(out);
-            });
-         }
+      resource.list(req.params.name, function(data) {
+         templateResource.onLoad(function(name, callback) {
+            data.forEachAttr = templateResource.forEachAttr;
+            res.render('list', data);
+         });
+         res.render(req.params.name + '_list', data, function(err, out) {
+            if (err) console.log(err.message)
+            else console.log(out);
+         });
       })
    }
 },
 {
    pattern: '/resource/item/create/{entity}',
    get: function(req, res) {
-      resource.item.get.create(req.params.entity, function(data){
-         res.render('create', data);
+      templateResource.onLoad(function(name, callback) {
+         resource.item.get.create(req.params.entity, function(data){
+            res.render('create', data);
+         });
       });
+      var data = {};
+      data.name = req.params.entity;
+      res.render(req.params.entity + '_create', data);
    }
 },
 {
@@ -177,6 +122,20 @@ var router_data = [
    get: function(req, res) {
       resource.item.get.create(req.params.name, function(data){
          res.end(JSON.stringify(data.content));
+      });
+   }
+},
+{
+   pattern: '/resource/item/update/{name}/{selector}',
+   get: function(req, res) {
+      var selector = JSON.parse(unescape(req.params.selector));
+      resource.find(req.params.name, selector, function(err, data) {
+         if (err) {
+            res.end(err.message);
+         }
+         else {
+            res.render(req.params.name + '_update', data);
+         }
       });
    }
 },
@@ -193,20 +152,6 @@ var router_data = [
             res.render('read_post', data);
          }
       });
-   }
-},   
-{  // update resource
-   pattern: '/resource/item',
-   put: function(req, res) {
-      var postData = JSON.parse(req.postdata.toString());
-      resource.update(postData.name, postData.selector, postData.content, function(err, data) {
-         if (err) {
-            res.end(err.message);
-         }
-         else {
-            res.end("Update Successful!");
-         }
-      })
    }
 },
 {

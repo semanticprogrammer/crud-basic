@@ -6,14 +6,15 @@
    <script type="text/javascript">
       function createResource(url) {
          var data = {};
-         data.collection = "{name}";
+         data.name = "{name}";
          data.content = sps.Controls.toObject();
          sps.AJAX.post({
             url: url,
+            handleAs: 'json',
             content: data,
             onSuccess: function(data) {
-               alert(data);
-               window.location = "/resource/list/{name}"
+               alert(data.message);
+               window.location = data.url;
             },
             onError: function(data) {alert('Problem!')}
          });
@@ -22,7 +23,7 @@
    {/page_script}
 {<content}
    <div class="page">
-      <form action="/resource/post" method="post">
+      <form>
          <header>
             <h3>Create Post</h3>
          </header>
@@ -33,7 +34,7 @@
          <label for="date">Date:</label>
          <input id="date" name="date" type="text"/>
          <textarea name="content" rows="3" colums="20" max-length="140" wrap="soft"></textarea>
-         <button onclick="createResource('/resource/item')" type="button">>Create</button>
+         <button onclick="createResource('/resource/item')" type="button">Create</button>
       </form>
    </div>
    {/content}

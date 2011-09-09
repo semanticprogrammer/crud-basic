@@ -1,36 +1,27 @@
 # CRUD-Basic
-CRUD-Basic show the way to implement CRUD functionality without help from MVC pattern.
-
-## Requirements
-* Node.js 0.5.2+
-* MongoDB
-* Mutant (https://github.com/semanticprogrammer/mutant not yet registered witn NPM. So make a clone and register module by npm link ./mutant )
-* Fork from DustJS (https://github.com/semanticprogrammer/dustjs)
-
+CRUD-Basic show the way to implement CRUD functionality with different kind of databases without help from MVC pattern.
 
 ## Routing language
-
-    POST    /resource     create
-    GET     /resource/id  read
-    PUT     /resource/id  update
-    DELETE  /resource/id  destroy
-    GET     /resource     list
     
     RESOURCE LIST:
-    
-    method: GET; URL: /resource/list/{name}
+      method: GET
+      URL: /resource/list/{name}
     
     READ RESOURCE:
-    method: GET; URL: /resource/{name}/{key}/{id}
+      method: GET
+      URL: /resource/{entity}/{selector}
     
     CREATE RESOURCE:
-    method: POST; URL: /resource/{name}
+      method: POST
+      URL: /resource/{entity}
     
     UPDATE RESOURCE:
-    method: PUT; URL: /resource/{name}/{key}/{id}
+      method: PUT
+      URL: /resource/{entity}
     
     DELETE RESOURCE:
-    method: DELETE; URL: /resource/{name}/{key}/{id}
+      method: DELETE
+      URL: /resource/{entity}
     
 
 ## Configuration

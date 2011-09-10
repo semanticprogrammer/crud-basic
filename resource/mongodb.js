@@ -1,14 +1,11 @@
 module.exports = function (env) {
    var 
    util = require('util'),
-   self = {};
-   self.database = {};
-   self.collection = {};
-   self.collection.model = {};
-   self.collection.get = {};
-   self.item = {};
-   self.item.model = {};
-   self.item.get = {};
+   self = { 
+      database: {},
+      collection: { model: {}, get: {}},
+      item: { model: {}, get: {}}
+   }
 
    var Db = require('mongodb').Db,
    Connection = require('mongodb').Connection,

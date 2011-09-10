@@ -1,13 +1,10 @@
 module.exports = function (env) {
    var mysql = require('mysql'),
-   self = {};
-   self.database = {};
-   self.table = {};
-   self.table.model = {};
-   self.table.get = {};
-   self.record = {};
-   self.record.model = {};
-   self.record.get = {};   
+   self = { 
+      database: {},
+      table: { model: {}, get: {}},
+      record: { model: {}, get: {}}
+   }
 
    var client = mysql.createClient({
       host: env.host,
@@ -24,12 +21,26 @@ module.exports = function (env) {
    self.open = function(callback) {
       return callback();
    }
-   
-   self.dbName = function() {
+
+   self.database.name = function() {
       return client.database;
    }
    
-   self.table.create = function(name, data, callback) {
+   self.database.info = function(callback) {
+      var data = {}, prop;
+      data.dbName = client.database;
+      data.entity = self.entity();
+      data.entityNames = [];
+      client.query("SHOW TABLES", function(err, names) {
+         names.forEach(function(element) {
+            if (!prop) prop = Object.keys(element)[0];
+            data.entityNames.push(element[prop]);
+         });
+         callback(data)
+      });      
+   }
+
+   self.table.create = function(data, callback) {
       return client.query('CREATE TABLE ' + unescape(data.name) + ' ...', callback)
    }
    
@@ -50,20 +61,6 @@ module.exports = function (env) {
          callback(nameList)
       });      
    };
-
-   self.databaseInfo = function(callback) {
-      var data = {}, prop;
-      data.dbName = client.database;
-      data.entity = self.entity();
-      data.entityNames = [];
-      client.query("SHOW TABLES", function(err, names) {
-         names.forEach(function(element) {
-            if (!prop) prop = Object.keys(element)[0];
-            data.entityNames.push(element[prop]);
-         });
-         callback(data)
-      });      
-   }
  
    self.collectionsInfo = function(callback) {
       db.collectionsInfo(function(err, cursor) {

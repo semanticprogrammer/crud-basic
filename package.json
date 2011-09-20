@@ -9,8 +9,7 @@
    },
    "dependencies": {
       "mutant": "git://github.com/semanticprogrammer/mutant.git",
-      "dust": "git://github.com/semanticprogrammer/dustjs.git",
-      "cradle": "git://github.com/cloudhead/cradle.git"
+      "dust": "git://github.com/semanticprogrammer/dustjs.git"
    },
    "engines": {
       "node": ">= 0.5.3"

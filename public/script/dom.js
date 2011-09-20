@@ -383,26 +383,27 @@ var sps = (function(use) {
          }
          table.appendChild(tbody);
          parent.appendChild(table);
-      };
-         //http://code.google.com/p/json-template/
-         //http://www.json.org/fatfree.html
-         http://docs.dojocampus.org/dojox/json/ref
-         //http://www.mongodb.org/display/DOCS/Database+References
-         self.createForm = function(data, parent) {
-            parent = parent || document.body;
-            var form = document.createElement("form");
-            var body = document.createElement("div");
-            for (var propName in data) {
-               header = document.createElement("header");
-               header.appendChild(document.createTextNode(propName));
-               form.appendChild(header);
-               if (use.isObject(data[propName])) {
-                  createFields(data[propName], body);
-               }
+      }
+
+      self.createForm = function(data, parent) {
+         parent = parent || document.body;
+         var form = document.createElement("form");
+         var body = document.createElement("div");
+         var button = document.createElement("button");
+         button.innerHTML = 'Create';
+         button.setAttribute('type', 'button');
+         for (var propName in data) {
+            header = document.createElement("header");
+            header.appendChild(document.createTextNode(propName));
+            form.appendChild(header);
+            if (use.isObject(data[propName])) {
+               createFields(data[propName], body);
             }
-            form.appendChild(body);
-            parent.appendChild(form);
-         };
+         }
+         form.appendChild(body);
+         form.appendChild(button);
+         parent.appendChild(form);
+      }
 
       function createFields(data, parent) {
          function createField(name, value, type, parent) {
@@ -424,6 +425,9 @@ var sps = (function(use) {
             field.setAttribute("name", name);
             field.setAttribute("value", value);
             field.setAttribute("type", type);
+            if (name == '_id') {
+              field.setAttribute('readonly', 'readonly'); 
+            }
             if (type == "checkbox" && use.isBoolean(value)) {
                field.checked = value;
             }

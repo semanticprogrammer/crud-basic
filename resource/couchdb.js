@@ -3,7 +3,10 @@ module.exports = function (env) {
    util = require('util'),
    self = { 
       database: {},
-      document: { model: {}, get: {}}
+      document: {
+         model: {}, 
+         get: {}
+      }
    }
    
    var cradle = require('cradle');
@@ -91,19 +94,43 @@ module.exports = function (env) {
       });
    }
    
-   self.document.update = function(data, callback) {
-      db.merge(data.selector, data.content, function(err, res) {
-         var _data = {};
-         if (err) _data.message = err.message
-         else {
-            _data.url = '/';
-            _data.message = 'Document ' + 
-            data.selector + ' has updated successfully!';                  
+   
+   self.document.model.update = function() {
+      return {
+         url: '/resource/document',
+         form: {
+            item : {}
          }
-         callback(_data);         
+      }
+   }
+   
+   self.document.get.update = function(query, callback) {
+      var data = self.document.model.update();
+      db.get(query.selector, function(err, doc) {
+         if (err) data.message = err.message
+         else {
+            data.form.item = doc;
+         }
+         callback(data);
       })
    }
    
+   self.document.update = function(data, callback) {
+      var cbdata = {};
+      db.get(selector, function (err, doc) {
+         db.save(selector, doc.rev, doc.content, function (err, res) {
+            if (err) {
+               cbdata.message = err.message 
+            }
+            else {
+               cbdata.url = '/';
+               cbdata.message = 'Document ' + data.selector + ' has updated successfully!';
+               callback(cbdata);
+            }
+         });
+      });
+   }
+
    self.document['delete'] = function(data, callback) {
       db.get(data.selector, function (err, res) {
          db.remove(data.selector, res.rev, function (err, res) {

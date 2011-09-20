@@ -12,6 +12,7 @@
    },
    "resource": {
       "template": "dust",
-      "db": "couchdb"
+      "db": "mongodb",
+      "view-point": "#view"
    }
 }

@@ -1,0 +1,39 @@
+<div class="page">
+   <div class="section">
+      <a href="#createpost" onclick="resource.view('/view/create/item', 'post')" class="border link button">Create Post</a>
+   </div>
+   <table class="data">
+      <thead>
+         <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Date</th>
+            <th scope="col">Content</th>
+            <th scope="col" colspan="2">Action</th>
+         </tr>
+      </thead>
+      <col id="title"/>
+      <col id="date"/>
+      <col id="content"/>
+      <tbody>
+         {#data}
+         <tr>
+            <td>
+               {title}
+            </td>
+            <td>
+               <time datetime="{date}" class="byline"><{date}></time>
+            </td>
+            <td>
+               {content}
+            </td>
+            <td>
+               <a href='#postedit' onclick="resource.view('/view/update/item', '{name}', {key:'{key}'})" class="link button">Edit</a>
+            </td>
+            <td>
+               <a href="#" onclick="resource['delete']('/resource/item', '{name}', {key:'{key}'})" class="link button">Delete</a>
+            </td>
+         </tr>
+         {/data}
+      </tbody>
+   </table>
+</div>

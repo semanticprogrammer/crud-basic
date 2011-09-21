@@ -6,10 +6,6 @@ module.exports = function (env) {
       host: env.host,
       port: env.port
    });
-
-   self.entity = function() {
-      return 'set';
-   };
    
    self.open = function(callback) {
       return callback();
@@ -52,7 +48,6 @@ module.exports = function (env) {
    self.databaseInfo = function(callback) {
       var data = {}, propName = 'Tables_in_' + client.database;
       data.dbName = client.database;
-      data.entity = self.entity();
       data.entityNames = [];
       client.query("SHOW TABLES", function(err, names) {
          names.forEach(function(element) {

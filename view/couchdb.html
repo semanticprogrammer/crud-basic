@@ -1,41 +1,38 @@
-         <div class="page">
-            <form>
-               <header class="section center">
-                  <label class="inline">Database:</label>
-                  <h2 class="inline">{dbName}</h2>
-               </header>
-               <div class="section">
-                  <a href = "#create" onclick="createForm('/resource/model/create/{entity}')" class="border link button">Create new {entity}</a>
-               </div>
-               <table class="data">
-                  <thead>
-                     <tr>
-                        <th scope="col">{entity}</th>
-                        <th scope="col" colspan="2">Action</th>
-                     </tr>
-                  </thead>
-                  <col id="entity-name"/>
-                  <col id="actions"/>
-                  <tbody>
-                     <tr>
-                        <td><a href="#list" onclick="resource.view('/view/list/post')">To work with post collection we already have corresponding templates</a></td>
-                        <td>
-                        </td>
-                        <td>
-                        </td>
-                     </tr>
-                     {#entityNames}
-                     <tr>
-                        <td><a href="#list" onclick="resource.view('/view/list/{.}')">{.}</a></td>
-                        <td>
-                           <a href = "#update" onclick="resource.updateForm('/resource/model/update/document', '{.}')" class="link button">Edit</a>
-                        </td>
-                        <td>
-                           <a href = "#" onclick = "resource['delete']('/resource/{entity}', '{.}')" class="link button">Delete</a>
-                        </td>
-                     </tr>
-                     {/entityNames}
-                  </tbody>
-               </table>
-            </form>
-         </div>
+<div class="page">
+   <form>
+      <header class="section center">
+         <label class="inline">Database:</label>
+         <h2 class="inline">{dbName}</h2>
+      </header>
+      <div class="section">
+         <a href = "#create" onclick="resource.createForm('/resource/model/create/document')" class="border link button">Create new document</a>
+      </div>
+      <table class="data">
+         <thead>
+            <tr>
+               <th scope="col">Document ID</th>
+               <th scope="col">Value</th>               
+               <th scope="col" colspan="2">Action</th>
+            </tr>
+         </thead>
+         <col id="entity-name"/>
+         <col id="actions"/>
+         <tbody>
+            {#entities}
+            <tr>
+               <td><a href="#list" onclick="resource.view('/view/list/{.id}')">{.id}</a></td>
+               <td>
+                  {.value}
+               </td>
+               <td>
+                  <a href = "#update" onclick="resource.updateForm('/resource/model/update/document', 'none', '{.id}')" class="link button">Edit</a>
+               </td>
+               <td>
+                  <a href = "#" onclick = "resource['delete']('/resource/document', '{.id}')" class="link button">Delete</a>
+               </td>
+            </tr>
+            {/entities}
+         </tbody>
+      </table>
+   </form>
+</div>

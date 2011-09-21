@@ -18,10 +18,6 @@ module.exports = function (env) {
    Server = require('mongodb').Server;
 
    var client = new Db(env.db, new Server(env.host, env.port, {}));
-
-   self.entity = function() {
-      return 'collection';
-   }
    
    self.open = function(callback) {
       client.open(function(error, client) {
@@ -59,7 +55,6 @@ module.exports = function (env) {
    self.database.info = function(callback) {
       var data = {}, re = new RegExp("^" + client.databaseName + ".");
       data.dbName = client.databaseName;
-      data.entity = self.entity();
       data.entityNames = [];
       client.collectionNames(function(err, names) {
          names.forEach(function(element) {
@@ -116,7 +111,6 @@ module.exports = function (env) {
    
    self.collection.get.create = function(query, callback) {
       var data = self.collection.model.create();
-      data.entity = self.entity();
       callback(data)
    }
    
@@ -134,7 +128,6 @@ module.exports = function (env) {
    
    self.collection.get.update = function(query, callback) {
       var data = self.collection.model.update();
-      data.entity = self.entity();
       data.form.collection.from = query.selector;
       callback(data)
    }

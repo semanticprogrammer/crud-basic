@@ -11,10 +11,6 @@ module.exports = function (env) {
    
    var cradle = require('cradle');
    var db = new(cradle.Connection)(env.host, env.port).database(env.db);
-   
-   self.entity = function() {
-      return 'document';
-   }
 
    self.open = function(callback) {
       callback();
@@ -31,11 +27,11 @@ module.exports = function (env) {
    self.database.info = function(callback) {
       var data = {};
       data.dbName = db.name;
-      data.entity = self.entity();
-      data.entityNames = [];
+      data.entities = [];
       db.all(function(err, res){
-         data.entityNames = res.rows.map(function (row) {
-            return row.id
+         data.entities = res.rows.map(function (row) {
+            console.log('row = ' + util.inspect(row));
+            return {id: row.id, value: JSON.stringify(row.value)}
          });
          callback(data);
       })
@@ -54,34 +50,24 @@ module.exports = function (env) {
    
    self.document.model.create = function() {
       return {
-         document : {
-            json: {}
+         url: '/resource/document',
+         form: {
+            document : {
+               json: {}
+            }
          }
       }
    }
-   
-   self.document.get.create = function(name, callback) {
+   self.document.get.create = function(query, callback) {
       var data = {};
-      data.entity = 'document';
-      data.content = {};
-      data.content = self.document.model.create();
+      data = self.document.model.create();
       callback(data)
    }
-   
-   //   self.document.create = function(id, obj, callback) {
-   //      obj = obj || id;
-   //      if (arguments.length == 3) {
-   //         db.save(id, obj, callback);
-   //      }
-   //      else 
-   //         db.save(obj, callback);
-   //   }
    self.document.create = function(data, callback) {
       if (data.content.json) {
          data.content = JSON.parse(data.content.json);
       }
       db.save(data.content, function(err, res) {
-         console.log('res = ' + util.inspect(res));
          var _data = {};
          if (err) {
             _data.message = err.message;
@@ -99,7 +85,7 @@ module.exports = function (env) {
       return {
          url: '/resource/document',
          form: {
-            item : {}
+            document: {}
          }
       }
    }
@@ -109,7 +95,7 @@ module.exports = function (env) {
       db.get(query.selector, function(err, doc) {
          if (err) data.message = err.message
          else {
-            data.form.item = doc;
+            data.form.document = doc;
          }
          callback(data);
       })
@@ -117,8 +103,8 @@ module.exports = function (env) {
    
    self.document.update = function(data, callback) {
       var cbdata = {};
-      db.get(selector, function (err, doc) {
-         db.save(selector, doc.rev, doc.content, function (err, res) {
+      db.get(data.selector, function (err, doc) {
+         db.save(data.selector, doc.rev, data.content, function (err, res) {
             if (err) {
                cbdata.message = err.message 
             }

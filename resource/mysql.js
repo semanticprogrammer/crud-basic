@@ -13,10 +13,6 @@ module.exports = function (env) {
       password: env.password,
       database: env.db
    });
-
-   self.entity = function() {
-      return 'table';
-   }
    
    self.open = function(callback) {
       return callback();
@@ -29,7 +25,6 @@ module.exports = function (env) {
    self.database.info = function(callback) {
       var data = {}, prop;
       data.dbName = client.database;
-      data.entity = self.entity();
       data.entityNames = [];
       client.query("SHOW TABLES", function(err, names) {
          names.forEach(function(element) {

@@ -18,6 +18,7 @@ var router_data = [
    pattern: '/view/db',
    get: function(req, res) {
       resource.database.info(function(data) {
+         data.forEachAttr = templateResource.forEachAttr;
          res.render(env.resource.db, data);
       });
    }

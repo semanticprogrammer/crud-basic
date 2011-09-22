@@ -2,8 +2,14 @@ module.exports = function (env) {
    var mysql = require('mysql'),
    self = { 
       database: {},
-      table: { model: {}, get: {}},
-      record: { model: {}, get: {}}
+      table: {
+         model: {}, 
+         get: {}
+      },
+      record: {
+         model: {}, 
+         get: {}
+      }
    }
 
    var client = mysql.createClient({
@@ -35,111 +41,93 @@ module.exports = function (env) {
       });      
    }
 
+   self.table.model.create = function() {
+      return {
+         url: '/resource/table',
+         form: {
+            table : {
+               json: {}
+            }
+         }
+      }
+   }
+   
+   self.table.get.create = function(query, callback) {
+      var data = self.table.model.create();
+      callback(data)
+   }
+
+   self.table.model.update = function() {
+      return {
+         url: '/resource/table',
+         form: {
+            table : {
+               from: '',
+               to: ''
+            }
+         }
+      }
+   }
+
+   self.table.get.update = function(query, callback) {
+      var data = self.table.model.update();
+      data.form.table.from = query.selector;
+      callback(data)
+   }
+//{"name": "table1", "definition": {"id": "int unsigned"}, "constraint":["PRIMARY KEY(id)"]}
    self.table.create = function(data, callback) {
-      return client.query('CREATE TABLE ' + unescape(data.name) + ' ...', callback)
-   }
-   
-   self.table['delete'] = function(name, callback) {
-      client.query('DROP TABLE ' + name, callback);
-   }  
-
-   self.entityNames = function(collectionName, callback) {
-      return db.collectionNames(collectionName, callback)
-   };
-   
-   self.entityShortNames = function(callback) {
-      var nameList = [], re = new RegExp("^" + db.databaseName + ".");
-      db.collectionNames(function(err, names) {
-         names.forEach(function(element) {
-            nameList.push(element.name.replace(re, ""));
-         });
-         callback(nameList)
-      });      
-   };
- 
-   self.collectionsInfo = function(callback) {
-      db.collectionsInfo(function(err, cursor) {
-         cursor.toArray(function(err, items) {
-            callback(items);
-         });
-      })   
-   }
-
-   self.collectionInfo = function(collectionName, callback) {
-      db.collectionsInfo(collectionName, function(err, cursor) {
-         cursor.toArray(function(err, items) {
-            callback(items);        
-         });
-      })
-   }
-
-   self.list = function(collectionName, callback) {
-      db.collection(collectionName, function(err, collection) {
+      var sql = 'CREATE TABLE ';
+      if (data.content.json) {
+         data.content = JSON.parse(data.content.json);
+      }
+      sql += data.content.name + ' (';
+      for (var prop in data.content.definition) {
+         sql += prop + ' ' + data.content.definition[prop] + ', ';
+      }
+      data.content.constraint.forEach(function(element) {
+         sql += element + ', ';
+      });
+      sql = sql.replace(/, $/g, "");
+      sql += ');';
+      client.query(sql, function(err) {
+         var cbdata = {};
          if (err) {
-            console.log("!!!!!!!!! db is ...." + util.inspect(db));
-            console.log("!!!!!!!!! err is ...." + util.inspect(err));
-            console.log("!!!!!!!!! db state is ...." + util.inspect(db.state));
-            callback(err, false);
+            cbdata.message = err.message;
          }
          else {
-            collection.find().toArray(function(err, docs) {
-               callback(err, docs);
-            });
+            cbdata.url = '/';
+            cbdata.message = 'Table ' + data.content.name + ' has created successfully!';
          }
+         callback(cbdata)
       })
    }
-
-   self.find = function(collectionName, selector, callback) {
-      db.collection(collectionName, function(err, collection) {
+   self.table.update = function(data, callback) {
+      client.query('RENAME TABLE ' + data.content.from,  + ' TO ' + data.content.to, function(err) {
+         var cbdata = {};
          if (err) {
-            callback(err);
+            cbdata.message = err.message;
          }
          else {
-            collection.find(selector, function(err, cursor) {
-               cursor.nextObject(function(err, doc) {            
-                  callback(err, doc);
-               });
-            });
+            cbdata.message = 'Table ' + data.content.from + ' has renamed successfully!';
+         }            
+         callback(cbdata)
+      })
+   }    
+   self.table['delete'] = function(data, callback) {
+      client.query('DROP TABLE ' + data.selector, function(err) {
+         var cbdata = {};
+         if (err) {
+            cbdata.message = err.message;
          }
+         else {
+            cbdata.message = 'Table ' + data.selector + ' has deleted successfully!';
+         }            
+         callback(cbdata)
       })
    }
-
    self.record.create = function(data, callback) {
       client.query('....', callback);
    }
 
-   self.update = function(collectionName, selector, postData, callback) {
-      db.collection(collectionName, function(err, collection) {
-         if (err) {
-            callback(err);
-         }
-         else {
-            collection.findAndModify(selector, [], {
-               $set: postData
-            }, {}, function(err, object) {
-               if (err) callback(err)
-               else callback(err, object);
-            });
-         }
-      })
-   }
-
-   self.remove = function(collectionName, selector, callback) {
-      db.collection(collectionName, function(err, collection) {
-         if (err) {            
-            callback(err);
-         }
-         else {
-            collection.remove(selector, function() {
-               callback();
-            });
-         }
-      })
-   }
-
-   self.renameCollection = function(fromCollection, toCollection, callback) {
-      return db.renameCollection(unescape(fromCollection), unescape(toCollection), callback)
-   }
-   
    return self;
 }

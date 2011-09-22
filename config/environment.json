@@ -12,7 +12,7 @@
    },
    "resource": {
       "template": "dust",
-      "db": "mongodb",
+      "db": "mysql",
       "view-point": "#view"
    }
 }

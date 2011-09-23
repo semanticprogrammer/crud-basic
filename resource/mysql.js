@@ -1,12 +1,13 @@
 module.exports = function (env) {
    var mysql = require('mysql'),
+   util = require('util');
    self = { 
       database: {},
       table: {
          model: {}, 
          get: {}
       },
-      record: {
+      item: {
          model: {}, 
          get: {}
       }
@@ -74,7 +75,7 @@ module.exports = function (env) {
       data.form.table.from = query.selector;
       callback(data)
    }
-//{"name": "table1", "definition": {"id": "int unsigned"}, "constraint":["PRIMARY KEY(id)"]}
+   //{"name": "table1", "definition": {"id": "int unsigned"}, "constraint":["PRIMARY KEY(id)"]}
    self.table.create = function(data, callback) {
       var sql = 'CREATE TABLE ';
       if (data.content.json) {
@@ -102,7 +103,7 @@ module.exports = function (env) {
       })
    }
    self.table.update = function(data, callback) {
-      client.query('RENAME TABLE ' + data.content.from,  + ' TO ' + data.content.to, function(err) {
+      client.query('RENAME TABLE ' + data.content.from + ' TO ' + data.content.to, function(err) {
          var cbdata = {};
          if (err) {
             cbdata.message = err.message;
@@ -125,8 +126,132 @@ module.exports = function (env) {
          callback(cbdata)
       })
    }
-   self.record.create = function(data, callback) {
-      client.query('....', callback);
+   self.list = function(name, callback) {
+      client.query("SELECT * FROM " + name, function(err, results, fields) {
+         var cbdata = {};
+         if (err) {
+            cbdata.message = err.message;
+         }
+         else {
+            cbdata.data = results;
+            cbdata.name = name;
+         }            
+         callback(cbdata);
+      });
+   }
+   self.item.model.create = function() {
+      return {
+         url: '/resource/item',
+         form: {
+            item : {
+               json: {}
+            }
+         }
+      }
+   }
+   self.item.get.create = function(query, callback) {
+      var data = {};
+      data = self.item.model.create();
+      data.context = query.context;
+      callback(data)
+   }
+   self.item.create = function(data, callback) {
+      var sql = 'INSERT INTO ' + data.context + '(';
+      if (data.content.json) {
+         data.content = JSON.parse(data.content.json);
+      }
+      for (var prop in data.content) {
+         sql += prop + ', ';
+      }
+      sql = sql.replace(/, $/g, ') VALUES(');
+      for (var prop in data.content) {
+         sql += data.content[prop] + ', ';
+      }
+      sql = sql.replace(/, $/g, ');');
+      client.query(sql, function(err, info) {
+         console.log(info.insertId);
+         var cbdata = {};
+         if (err) {
+            cbdata.message = err.message;
+         }
+         else {
+            cbdata.url = 'view/list/' + data.context;
+            cbdata.message = 'Record ' + data.context + ' has created successfully!';
+         }
+         callback(cbdata)         
+      });
+   }
+   self.item.model.update = function() {
+      return {
+         url: '/resource/item',
+         form: {
+            item : {}
+         }
+      }
+   }
+   self.item.get.update = function(query, callback) {
+      var selector = '';
+      query.selector = JSON.parse(query.selector);
+      for (var prop in query.selector) {
+         selector += prop + ' = ' + query.selector[prop] + ' AND ';
+      }
+      selector = selector.replace(/ AND $/g, ';');
+      var data = self.item.model.update();
+      data.context = query.context;
+      client.query("SELECT * FROM " + query.context + ' WHERE ' + selector, 
+         function(err, results, fields) {
+            if (err) {
+               data.message = err.message;
+            }
+            else {
+               data.form.item = results[0];
+            }            
+            callback(data);
+         }
+         );
+   }
+   self.item.update = function(data, callback) {
+      var selector = '';
+      for (var prop in data.selector) {
+         selector += prop + ' = ' + data.selector[prop] + ' AND ';
+      }
+      selector = selector.replace(/ AND $/g, ';');
+      var sql = 'UPDATE ' + data.context + ' SET ';
+      for (var prop in data.content) {
+         sql += prop + ' = ' + data.content[prop] + ', ';
+      }
+      sql = sql.replace(/, $/g, ' ');
+      sql += 'WHERE ' + selector;
+      client.query(sql, function(err, info) {
+         var cbdata = {};
+         if (err) {
+            cbdata.message = err.message;
+         }
+         else {
+            cbdata.url = 'view/list/' + data.context;
+            cbdata.message = 'Record ' + data.context + ' ' + selector + ' has updated successfully!';
+         }
+         callback(cbdata)         
+      });
+   }
+   self.item['delete'] = function(data, callback) {
+      var selector = '';
+      for (var prop in data.selector) {
+         selector += prop + ' = ' + data.selector[prop] + ' AND ';
+      }
+      selector = selector.replace(/ AND $/g, ';');      
+      var sql = 'DELETE FROM ' + data.context + ' WHERE ' + selector;
+      client.query(sql, function(err, info) {
+         var cbdata = {};
+         if (err) {
+            cbdata.message = err.message;
+         }
+         else {
+            cbdata.message = 'Record ' + data.context + ' ' + selector + ' has deleted successfully!';
+         }
+         cbdata.url = 'view/list/' + data.context;         
+         callback(cbdata)
+      });
    }
 
    return self;

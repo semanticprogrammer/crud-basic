@@ -23,10 +23,10 @@
                {#forEachAttr}{~n}{key}: {value}{/forEachAttr}
             </td>
             <td>
-               <a href='#update' onclick="resource.updateForm('/resource/model/update/item', '{name}', {_id:'{_id}'})" class="link button">Edit</a>
+               <a href='#update' onclick="resource.updateForm('/resource/model/update/item', '{name}', {?_id}{_id:'{_id}'}{/_id}{?id}{id:'{id}'}{/id})" class="link button">Edit</a>
             </td>   
             <td>
-               <a href = "#" onclick = "resource['delete']('/resource/item', '{name}', {_id:'{_id}'})" class="link button">Delete</a>
+               <a href = "#" onclick = "resource['delete']('/resource/item', '{name}', {?_id}{_id:'{_id}'}{/_id}{?id}{id:'{id}'}{/id})" class="link button">Delete</a>
             </td>                     
          </tr>
          {/data}

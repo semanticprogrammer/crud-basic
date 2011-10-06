@@ -39,45 +39,38 @@ module.exports = function (env) {
          }
       })
    }
-
    self.database.name = function() {
       return client.databaseName;
    }
-
    self.database.lastStatus = function(callback) {
       return client.lastStatus(callback)
    }
-   
    self.database.drop = function(callback) {
       return client.dropDatabase(callback)
-   }   
-
+   }
    self.database.info = function(callback) {
-      var data = {}, re = new RegExp("^" + client.databaseName + ".");
-      data.dbName = client.databaseName;
-      data.entityNames = [];
+      var ret = {}, re = new RegExp('^' + client.databaseName + '.');
+      ret.dbName = client.databaseName;
+      ret.entityNames = [];
       client.collectionNames(function(err, names) {
          names.forEach(function(element) {
-            data.entityNames.push(element.name.replace(re, ""));
+            ret.entityNames.push(element.name.replace(re, ''));
          });
-         callback(data)
+         callback(ret)
       });      
    }
-
    self.collection.names = function(name, callback) {
       return client.collectionNames(name, callback)
-   }
-   
+   }   
    self.collection.shortNames = function(callback) {
-      var nameList = [], re = new RegExp("^" + client.databaseName + ".");
+      var ret = [], re = new RegExp('^' + client.databaseName + '.');
       client.collectionNames(function(err, names) {
          names.forEach(function(element) {
-            nameList.push(element.name.replace(re, ""));
+            ret.push(element.name.replace(re, ''));
          });
-         callback(nameList)
+         callback(ret)
       });
    }
-   
    self.collectionsInfo = function(callback) {
       client.collectionsInfo(function(err, cursor) {
          cursor.toArray(function(err, items) {
@@ -85,7 +78,6 @@ module.exports = function (env) {
          });
       })   
    }
-
    self.collectionInfo = function(collectionName, callback) {
       client.collectionsInfo(collectionName, function(err, cursor) {
          cursor.toArray(function(err, items) {
@@ -107,13 +99,11 @@ module.exports = function (env) {
             }
          }
       }
-   }
-   
+   }   
    self.collection.get.create = function(query, callback) {
-      var data = self.collection.model.create();
-      callback(data)
+      var ret = self.collection.model.create();
+      callback(ret)
    }
-   
    self.collection.model.update = function() {
       return {
          url: '/resource/collection',
@@ -125,76 +115,72 @@ module.exports = function (env) {
          }
       }
    }
-   
    self.collection.get.update = function(query, callback) {
-      var data = self.collection.model.update();
-      data.form.collection.from = query.selector;
-      callback(data)
+      var ret = self.collection.model.update();
+      ret.form.collection.from = query.selector;
+      callback(ret)
    }
-   
    self.collection.create = function(data, callback) {
       client.createCollection(unescape(data.content.name), function(err, collection) {
-         var _data = {};
+         var ret = {};
          if (err) {
-            _data.message = err.message;
+            ret.message = err.message;
          }
          else {
-            _data.url = '/';
-            _data.message = 'Collection ' + collection.collectionName + ' has created successfully!';
+            ret.url = '/';
+            ret.message = 'Collection ' + collection.collectionName + ' has created successfully!';
          }
-         callback(_data)
+         callback(ret)
       });
    }
    self.collection.update = function(data, callback) {
       client.renameCollection(data.content.from, data.content.to, function(err, reply) {
-         var _data = {};
+         var ret = {};
          if (err) {
-            _data.message = err.message;
+            ret.message = err.message;
          }
          else {
-            _data.url = '/';
-            _data.message = 'Collection ' + data.content.from + " renamed to " + data.content.to + " successfully!";
+            ret.url = '/';
+            ret.message = 'Collection ' + data.content.from + " renamed to " + data.content.to + " successfully!";
          }
-         callback(_data)
+         callback(ret)
       });
-   }   
+   }
    self.collection['delete'] = function(data, callback) {
       client.collection(data.selector, function(err, collection) {
          collection.drop(function(err) {
-            var _data = {};
+            var ret = {};
             if (err) {
-               _data.message = err.message;
+               ret.message = err.message;
             }
             else {
-               _data.message = 'Collection ' + data.selector + ' has deleted successfully!';
-            }            
-            callback(_data)
+               ret.message = 'Collection ' + data.selector + ' has deleted successfully!';
+            }
+            callback(ret)
          })
       })
    }
-   
    self.list = function(name, callback) {
       client.collection(name, function(err, collection) {
-         var _data = {};
+         var ret = {};
          if (err) {
-            _data.message = err.message;
-            callback(_data);
+            ret.message = err.message;
+            callback(ret);
          }
          else {
             collection.find().toArray(function(err, docs) {
                if (err) {
-                  _data.message = err.message;
+                  ret.message = err.message;
                }
                else {
-                  _data.data = docs;
-                  _data.name = name;
+                  ret.data = docs;
+                  ret.name = name;
                }
-               callback(_data);
+               callback(ret);
             })
          }
       })
    }
-
    self.find = function(collectionName, selector, callback) {
       client.collection(collectionName, function(err, collection) {
          if (err) {
@@ -209,7 +195,6 @@ module.exports = function (env) {
          }
       })
    }
-
    self.item.model.create = function() {
       return {
          url: '/resource/item',
@@ -220,14 +205,12 @@ module.exports = function (env) {
          }
       }
    }
-   
    self.item.get.create = function(query, callback) {
-      var data = {};
-      data = self.item.model.create();
-      data.context = query.context;
-      callback(data)
+      var ret = {};
+      ret = self.item.model.create();
+      ret.context = query.context;
+      callback(ret)
    }
-   
    self.item.create = function(data, callback) {
       client.collection(data.context, function(err, collection) {
          if (err) {
@@ -240,20 +223,19 @@ module.exports = function (env) {
             collection.insert(data.content, {
                safe:true
             }, function(err, object) {               
-               var _data = {};
+               var ret = {};
                if (err) {
-                  _data.message = err.message;
+                  ret.message = err.message;
                }
                else {
-                  _data.url = 'view/list/' + data.context;
-                  _data.message = 'Item ' + collection.collectionName + ' has created successfully!';
+                  ret.url = 'view/list/' + data.context;
+                  ret.message = 'Item ' + collection.collectionName + ' has created successfully!';
                }
-               callback(_data)
+               callback(ret)
             });
          }
       })
    }
-   
    self.item.model.update = function() {
       return {
          url: '/resource/item',
@@ -262,36 +244,34 @@ module.exports = function (env) {
          }
       }
    }
-   
    self.item.get.update = function(query, callback) {
       query.selector = JSON.parse(query.selector);    
-      var data = self.item.model.update();
-      data.context = query.context;
+      var ret = self.item.model.update();
+      ret.context = query.context;
       client.collection(query.context, function(err, collection) {
          if (err) {
-            data.message = err.message;
-            callback(data);
+            ret.message = err.message;
+            callback(ret);
          }
          else {
             if (query.selector._id) {
                query.selector._id = new client.bson_serializer.ObjectID(query.selector._id);
-            }            
+            }
             collection.find(query.selector, function(err, cursor) {
                cursor.nextObject(function(err, doc) {
-                  data.form.item = doc;
-                  callback(data);
+                  ret.form.item = doc;
+                  callback(ret);
                });
             });
          }
       })
    }
-
    self.item.update = function(data, callback) {
       client.collection(data.context, function(err, collection) {
-         var cbdata = {};
+         var ret = {};
          if (err) {
-            cbdata.message = err.message;
-            callback(cbdata);
+            ret.message = err.message;
+            callback(ret);
          }
          else {
             if (data.selector._id) {
@@ -306,24 +286,23 @@ module.exports = function (env) {
             }, {
                safe:true
             }, function(err) {
-               if (err) cbdata.message = err.message
+               if (err) ret.message = err.message
                else {
-                  cbdata.url = '/view/list/' + collection.collectionName;
-                  cbdata.message = collection.collectionName + ' ' + 
+                  ret.url = '/view/list/' + collection.collectionName;
+                  ret.message = collection.collectionName + ' ' + 
                   JSON.stringify(data.selector) + ' has updated successfully!';                  
                }
-               callback(cbdata);
+               callback(ret);
             });
          }
       })
    }
-   
    self.item['delete'] = function(data, callback) {      
       client.collection(data.context, function(err, collection) {
-         var _data = {};
+         var ret = {};
          if (err) {
-            _data.message = err.message;
-            callback(_data);
+            ret.message = err.message;
+            callback(ret);
          }
          else {
             if (data.selector._id) {
@@ -331,13 +310,13 @@ module.exports = function (env) {
             }
             collection.remove(data.selector, function() {
                if (err) {
-                  _data.message = err.message
+                  ret.message = err.message
                }
                else {
-                  _data.message = data.context + ' ' + JSON.stringify(data.selector) + ' has deleted successfully!';
+                  ret.message = data.context + ' ' + JSON.stringify(data.selector) + ' has deleted successfully!';
                }
-               _data.url = 'view/list/' + data.context;
-               callback(_data);
+               ret.url = 'view/list/' + data.context;
+               callback(ret);
             });
          }
       })

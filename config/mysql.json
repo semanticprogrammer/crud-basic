@@ -1,7 +1,7 @@
 {
-   "host": "localhost",
+   "host": "bsdserver",
    "port": "3306",
-   "user": "mylogin",
-   "password": "mypassword",   
+   "user": "root",
+   "password": "inforg13",   
    "db": "test"
 }

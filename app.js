@@ -13,7 +13,20 @@ var db_env = require('./config/' + env.resource.db + '.json', 'utf-8');
 var resource = require('./resource/' + env.resource.db)(db_env);
 var templateResource = require('./resource/' + env.resource.template)();
 
-var router_data = [ 
+var router_data = [
+{
+   middleware: function(req, res, next) {
+      res.render = function (templatename, data) {
+         templateResource.render(templatename, data, function (err, output) {
+            if (err) {
+               res.end(err.message);
+            }
+            res.end(output);
+         });
+      };
+      next();         
+   }
+},
 {
    pattern: '/view/db',
    get: function(req, res) {
@@ -110,28 +123,19 @@ var router_data = [
    }
 },
 {
-   get: connect.static(__dirname + "/" + env.static.area)
+   middleware: connect.static(__dirname + "/" + env.static.area)
+},
+{
+   resourceNotFound: function get(req, res) {
+      res.setNotFoundStatus();
+      res.end('<h3>Resource Not Found</h3><pre>' + req.params.pathname + '</pre>');
+   }
 }
 ];
 
 function start(callback) {
    console.log("Connecting to DB Server: " + db_env.host + ":" + db_env.port);
    router = router(router_data);
-   router.use(function(req, res, next) {
-      res.render = function (templatename, data) {
-         templateResource.render(templatename, data, function (err, output) {
-            if (err) {
-               res.end(err.message);
-            }
-            res.end(output);
-         });
-      };
-      next();
-   });
-   router.plug(function get(req, res) {
-      res.setNotFoundStatus();
-      res.end('<h3>Resource Not Found</h3><pre>' + req.params.pathname + '</pre>');
-   });
    env.app.handler = handler(router);
    resource.open(function(err, db) {
       templateResource.prepareTemplates(__dirname + "/" + env.view.area, env.view.ext, callback);

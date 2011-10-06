@@ -7,47 +7,40 @@ module.exports = function (env) {
          model: {}, 
          get: {}
       }
-   }
-   
+   }   
    var cradle = require('cradle');
    var db = new(cradle.Connection)(env.host, env.port).database(env.db);
-
    self.open = function(callback) {
       callback();
    }
-   
    self.database.create = function() {
       return db.create();
    }
-   
    self.database.name = function() {
       return db.name;
    }
-   
    self.database.info = function(callback) {
-      var data = {};
-      data.dbName = db.name;
-      data.entities = [];
+      var ret = {};
+      ret.dbName = db.name;
+      ret.entities = [];
       db.all(function(err, res){
-         data.entities = res.rows.map(function (row) {
-            console.log('row = ' + util.inspect(row));
+         ret.entities = res.rows.map(function (row) {
             return {id: row.id, value: JSON.stringify(row.value)}
          });
-         callback(data);
+         callback(ret);
       })
    }
    self.document.get = function(data, callback) {
       db.get(data.selector, function(err, doc) {
-         var _data = {};
-         if (err) _data.message = err.message
+         var ret = {};
+         if (err) ret.message = err.message
          else {
-            _data.url = '/resource/document/' + doc._id;
-            _data.content = doc;                  
+            ret.url = '/resource/document/' + doc._id;
+            ret.content = doc;                  
          }
-         callback(_data);
+         callback(ret);
       })
    }
-   
    self.document.model.create = function() {
       return {
          url: '/resource/document',
@@ -59,28 +52,26 @@ module.exports = function (env) {
       }
    }
    self.document.get.create = function(query, callback) {
-      var data = {};
-      data = self.document.model.create();
-      callback(data)
+      var ret = {};
+      ret = self.document.model.create();
+      callback(ret)
    }
    self.document.create = function(data, callback) {
       if (data.content.json) {
          data.content = JSON.parse(data.content.json);
       }
       db.save(data.content, function(err, res) {
-         var _data = {};
+         var ret = {};
          if (err) {
-            _data.message = err.message;
+            ret.message = err.message;
          }
          else {
-            _data.url = '/';
-            _data.message = 'Document ' + res._id + ' has created successfully!';
+            ret.url = '/';
+            ret.message = 'Document ' + res._id + ' has created successfully!';
          }
-         callback(_data)         
+         callback(ret)
       });
-   }
-   
-   
+   }   
    self.document.model.update = function() {
       return {
          url: '/resource/document',
@@ -89,49 +80,45 @@ module.exports = function (env) {
          }
       }
    }
-   
    self.document.get.update = function(query, callback) {
-      var data = self.document.model.update();
+      var ret = self.document.model.update();
       db.get(query.selector, function(err, doc) {
-         if (err) data.message = err.message
+         if (err) ret.message = err.message
          else {
-            data.form.document = doc;
+            ret.form.document = doc;
          }
-         callback(data);
+         callback(ret);
       })
    }
-   
    self.document.update = function(data, callback) {
-      var cbdata = {};
+      var ret = {};
       db.get(data.selector, function (err, doc) {
          db.save(data.selector, doc.rev, data.content, function (err, res) {
             if (err) {
-               cbdata.message = err.message 
+               ret.message = err.message 
             }
             else {
-               cbdata.url = '/';
-               cbdata.message = 'Document ' + data.selector + ' has updated successfully!';
-               callback(cbdata);
+               ret.url = '/';
+               ret.message = 'Document ' + data.selector + ' has updated successfully!';
+               callback(ret);
             }
          });
       });
    }
-
    self.document['delete'] = function(data, callback) {
       db.get(data.selector, function (err, res) {
          db.remove(data.selector, res.rev, function (err, res) {
-            var _data = {};
+            var ret = {};
             if (err) {
-               _data.message = err.message;
-               callback(_data);
+               ret.message = err.message;
+               callback(ret);
             }
             else {
-               _data.message = 'Document ' + data.selector + ' has deleted successfully!';
-               callback(_data);
+               ret.message = 'Document ' + data.selector + ' has deleted successfully!';
+               callback(ret);
             }
          })
-      })      
+      })
    }
-
    return self;
 }

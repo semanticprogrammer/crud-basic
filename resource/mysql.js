@@ -12,7 +12,6 @@ module.exports = function (env) {
          get: {}
       }
    }
-
    var client = mysql.createClient({
       host: env.host,
       port: env.port,
@@ -20,28 +19,24 @@ module.exports = function (env) {
       password: env.password,
       database: env.db
    });
-   
    self.open = function(callback) {
       return callback();
    }
-
    self.database.name = function() {
       return client.database;
    }
-   
    self.database.info = function(callback) {
-      var data = {}, prop;
-      data.dbName = client.database;
-      data.entityNames = [];
+      var ret = {}, prop;
+      ret.dbName = client.database;
+      ret.entityNames = [];
       client.query("SHOW TABLES", function(err, names) {
          names.forEach(function(element) {
             if (!prop) prop = Object.keys(element)[0];
-            data.entityNames.push(element[prop]);
+            ret.entityNames.push(element[prop]);
          });
-         callback(data)
+         callback(ret)
       });      
    }
-
    self.table.model.create = function() {
       return {
          url: '/resource/table',
@@ -52,12 +47,10 @@ module.exports = function (env) {
          }
       }
    }
-   
    self.table.get.create = function(query, callback) {
-      var data = self.table.model.create();
-      callback(data)
+      var ret = self.table.model.create();
+      callback(ret)
    }
-
    self.table.model.update = function() {
       return {
          url: '/resource/table',
@@ -69,11 +62,10 @@ module.exports = function (env) {
          }
       }
    }
-
    self.table.get.update = function(query, callback) {
-      var data = self.table.model.update();
-      data.form.table.from = query.selector;
-      callback(data)
+      var ret = self.table.model.update();
+      ret.form.table.from = query.selector;
+      callback(ret)
    }
    //{"name": "table1", "definition": {"id": "int unsigned"}, "constraint":["PRIMARY KEY(id)"]}
    self.table.create = function(data, callback) {
@@ -91,52 +83,52 @@ module.exports = function (env) {
       sql = sql.replace(/, $/g, "");
       sql += ');';
       client.query(sql, function(err) {
-         var cbdata = {};
+         var ret = {};
          if (err) {
-            cbdata.message = err.message;
+            ret.message = err.message;
          }
          else {
-            cbdata.url = '/';
-            cbdata.message = 'Table ' + data.content.name + ' has created successfully!';
+            ret.url = '/';
+            ret.message = 'Table ' + data.content.name + ' has created successfully!';
          }
-         callback(cbdata)
+         callback(ret)
       })
    }
    self.table.update = function(data, callback) {
       client.query('RENAME TABLE ' + data.content.from + ' TO ' + data.content.to, function(err) {
-         var cbdata = {};
+         var ret = {};
          if (err) {
-            cbdata.message = err.message;
+            ret.message = err.message;
          }
          else {
-            cbdata.message = 'Table ' + data.content.from + ' has renamed successfully!';
-         }            
-         callback(cbdata)
+            ret.message = 'Table ' + data.content.from + ' has renamed successfully!';
+         }       
+         callback(ret)
       })
-   }    
+   }
    self.table['delete'] = function(data, callback) {
       client.query('DROP TABLE ' + data.selector, function(err) {
-         var cbdata = {};
+         var ret = {};
          if (err) {
-            cbdata.message = err.message;
+            ret.message = err.message;
          }
          else {
-            cbdata.message = 'Table ' + data.selector + ' has deleted successfully!';
-         }            
-         callback(cbdata)
+            ret.message = 'Table ' + data.selector + ' has deleted successfully!';
+         }
+         callback(ret)
       })
    }
    self.list = function(name, callback) {
       client.query("SELECT * FROM " + name, function(err, results, fields) {
-         var cbdata = {};
+         var ret = {};
          if (err) {
-            cbdata.message = err.message;
+            ret.message = err.message;
          }
          else {
-            cbdata.data = results;
-            cbdata.name = name;
-         }            
-         callback(cbdata);
+            ret.data = results;
+            ret.name = name;
+         }
+         callback(ret);
       });
    }
    self.item.model.create = function() {
@@ -150,10 +142,10 @@ module.exports = function (env) {
       }
    }
    self.item.get.create = function(query, callback) {
-      var data = {};
-      data = self.item.model.create();
-      data.context = query.context;
-      callback(data)
+      var ret = {};
+      ret = self.item.model.create();
+      ret.context = query.context;
+      callback(ret)
    }
    self.item.create = function(data, callback) {
       var sql = 'INSERT INTO ' + data.context + '(';
@@ -169,16 +161,15 @@ module.exports = function (env) {
       }
       sql = sql.replace(/, $/g, ');');
       client.query(sql, function(err, info) {
-         console.log(info.insertId);
-         var cbdata = {};
+         var ret = {};
          if (err) {
-            cbdata.message = err.message;
+            ret.message = err.message;
          }
          else {
-            cbdata.url = 'view/list/' + data.context;
-            cbdata.message = 'Record ' + data.context + ' has created successfully!';
+            ret.url = 'view/list/' + data.context;
+            ret.message = 'Record ' + data.context + ' has created successfully!';
          }
-         callback(cbdata)         
+         callback(ret)
       });
    }
    self.item.model.update = function() {
@@ -196,19 +187,19 @@ module.exports = function (env) {
          selector += prop + ' = ' + query.selector[prop] + ' AND ';
       }
       selector = selector.replace(/ AND $/g, ';');
-      var data = self.item.model.update();
-      data.context = query.context;
+      var ret = self.item.model.update();
+      ret.context = query.context;
       client.query("SELECT * FROM " + query.context + ' WHERE ' + selector, 
          function(err, results, fields) {
             if (err) {
-               data.message = err.message;
+               ret.message = err.message;
             }
             else {
-               data.form.item = results[0];
-            }            
-            callback(data);
+               ret.form.item = results[0];
+            }         
+            callback(ret);
          }
-         );
+      );
    }
    self.item.update = function(data, callback) {
       var selector = '';
@@ -223,15 +214,15 @@ module.exports = function (env) {
       sql = sql.replace(/, $/g, ' ');
       sql += 'WHERE ' + selector;
       client.query(sql, function(err, info) {
-         var cbdata = {};
+         var ret = {};
          if (err) {
-            cbdata.message = err.message;
+            ret.message = err.message;
          }
          else {
-            cbdata.url = 'view/list/' + data.context;
-            cbdata.message = 'Record ' + data.context + ' ' + selector + ' has updated successfully!';
+            ret.url = 'view/list/' + data.context;
+            ret.message = 'Record ' + data.context + ' ' + selector + ' has updated successfully!';
          }
-         callback(cbdata)         
+         callback(ret)
       });
    }
    self.item['delete'] = function(data, callback) {
@@ -239,20 +230,19 @@ module.exports = function (env) {
       for (var prop in data.selector) {
          selector += prop + ' = ' + data.selector[prop] + ' AND ';
       }
-      selector = selector.replace(/ AND $/g, ';');      
+      selector = selector.replace(/ AND $/g, ';');
       var sql = 'DELETE FROM ' + data.context + ' WHERE ' + selector;
       client.query(sql, function(err, info) {
-         var cbdata = {};
+         var ret = {};
          if (err) {
-            cbdata.message = err.message;
+            ret.message = err.message;
          }
          else {
-            cbdata.message = 'Record ' + data.context + ' ' + selector + ' has deleted successfully!';
+            ret.message = 'Record ' + data.context + ' ' + selector + ' has deleted successfully!';
          }
-         cbdata.url = 'view/list/' + data.context;         
-         callback(cbdata)
+         ret.url = 'view/list/' + data.context;         
+         callback(ret)
       });
    }
-
    return self;
 }

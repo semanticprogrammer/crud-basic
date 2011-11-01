@@ -222,7 +222,7 @@ module.exports = function (env) {
             }
             collection.insert(data.content, {
                safe:true
-            }, function(err, object) {               
+            }, function(err, object) {
                var ret = {};
                if (err) {
                   ret.message = err.message;

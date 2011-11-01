@@ -12,7 +12,7 @@
    },
    "resource": {
       "template": "dust",
-      "db": "mongodb",
+      "db": "redis",
       "view-point": "#view"
    }
 }

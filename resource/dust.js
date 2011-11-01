@@ -43,8 +43,8 @@ module.exports = function (env) {
             else filesRead += 1;
          });
       });
-   };   
-   
+   };
+
    self.createTemplate = function(templateName, callback) {
       var templatePath = path.join(env.dir, templateName + env.ext);
       try {

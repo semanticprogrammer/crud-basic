@@ -68,7 +68,7 @@ var router_data = [
 {
    pattern: '/resource/model/create/{entity}',
    get: function(req, res) {
-      resource[req.params.entity].get.create(req.params.query, function(data){
+      resource[req.params.entity].get.create(req.params.query, function(data) {
          res.end(JSON.stringify(data));
       });
    }

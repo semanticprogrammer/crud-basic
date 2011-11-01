@@ -1,0 +1,131 @@
+<div class="page">
+   <form>
+      <header class="section center">
+         <label class="inline">Database:</label>
+         <h2 class="inline">{dbName}</h2>
+      </header>
+      <div class="section">
+         <a href = "#create-string" onclick="resource.createForm('/resource/model/create/string')" class="border link button">Create new String(Key-Value)</a>
+      </div>
+      <table class="data">
+			<caption>Strings</caption>         
+         <thead>
+            <tr>
+               <th scope="col">Key</th>
+               <th scope="col" colspan="2">Action</th>
+            </tr>
+         </thead>
+         <col id="entity-name"/>
+         <col id="actions"/>
+         <tbody>
+            {#strings}
+            <tr>
+               <td><a href="#list" onclick="resource.view('/view/string/{key}')">{key}</a></td>
+               <td>
+                  <a href = "#update" onclick="resource.updateForm('/resource/model/update/key', '{key}')" class="link button">Rename</a>
+               </td>
+               <td>
+                  <a href = "#" onclick = "resource['delete']('/resource/key', '{key}')" class="link button">Delete</a>
+               </td>
+            </tr>
+            {/strings}
+         </tbody>
+      </table>
+      <table class="data">
+			<caption>Lists</caption>         
+         <thead>
+            <tr>
+               <th scope="col">Key</th>
+               <th scope="col" colspan="2">Action</th>
+            </tr>
+         </thead>
+         <col id="entity-name"/>
+         <col id="actions"/>
+         <tbody>
+            {#lists}
+            <tr>
+               <td><a href="#list" onclick="resource.view('/view/list/{key}')">{key}</a></td>
+               <td>
+                  <a href = "#update" onclick="resource.updateForm('/resource/model/update/key', '{key}')" class="link button">Rename</a>
+               </td>
+               <td>
+                  <a href = "#" onclick = "resource['delete']('/resource/key', '{key}')" class="link button">Delete</a>
+               </td>
+            </tr>
+            {/lists}
+         </tbody>
+      </table>
+      <table class="data">
+			<caption>Sets</caption>         
+         <thead>
+            <tr>
+               <th scope="col">Key</th>
+               <th scope="col" colspan="2">Action</th>
+            </tr>
+         </thead>
+         <col id="entity-name"/>
+         <col id="actions"/>
+         <tbody>
+            {#sets}
+            <tr>
+               <td><a href="#list" onclick="resource.view('/view/set/{key}')">{key}</a></td>
+               <td>
+                  <a href = "#update" onclick="resource.updateForm('/resource/model/update/key', '{key}')" class="link button">Rename</a>
+               </td>
+               <td>
+                  <a href = "#" onclick = "resource['delete']('/resource/key', '{key}')" class="link button">Delete</a>
+               </td>
+            </tr>
+            {/sets}
+         </tbody>
+      </table>
+      <table class="data">
+			<caption>Sorted Sets</caption>         
+         <thead>
+            <tr>
+               <th scope="col">Key</th>
+               <th scope="col" colspan="2">Action</th>
+            </tr>
+         </thead>
+         <col id="entity-name"/>
+         <col id="actions"/>
+         <tbody>
+            {#zsets}
+            <tr>
+               <td><a href="#list" onclick="resource.view('/view/zset/{key}')">{key}</a></td>
+               <td>
+                  <a href = "#update" onclick="resource.updateForm('/resource/model/update/key', '{key}')" class="link button">Rename</a>
+               </td>
+               <td>
+                  <a href = "#" onclick = "resource['delete']('/resource/key', '{key}')" class="link button">Delete</a>
+               </td>
+            </tr>
+            {/zsets}
+         </tbody>
+      </table>
+      <table class="data">
+			<caption>Hashs</caption>         
+         <thead>
+            <tr>
+               <th scope="col">Key</th>
+               <th scope="col" colspan="2">Action</th>
+            </tr>
+         </thead>
+         <col id="entity-name"/>
+         <col id="actions"/>
+         <tbody>
+            {#hashs}
+            <tr>
+               <td><a href="#list" onclick="resource.view('/view/hashs/{key}')">{key}</a></td>
+               <td>
+                  <a href = "#update" onclick="resource.updateForm('/resource/model/update/key', '{key}')" class="link button">Rename</a>
+               </td>
+               <td>
+                  <a href = "#" onclick = "resource['delete']('/resource/key', '{key}')" class="link button">Delete</a>
+               </td>
+            </tr>
+            {/hashs}
+         </tbody>
+      </table>
+   </form>
+</div>

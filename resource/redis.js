@@ -128,20 +128,23 @@ module.exports = function (env) {
       return {
          url: '/resource/string',
          form: {
-            string : {}
+            string: {
+               key: '',
+               value: ''
+            }
          }
       }
    }
    self.string.get.update = function(query, callback) {
-      query.selector = JSON.parse(query.selector);    
-      var ret = self.str.model.update();
+      var ret = self.string.model.update();
       ret.context = query.context;
       client.get(query.selector, function(err, value) {
          if (err) {
             ret.message = err.message;
             callback(ret);
-         }               
-         ret.form.string = value;
+         }
+         ret.form.string.key = query.selector;
+         ret.form.string.value = value;
          callback(ret);
       });
    }
@@ -170,7 +173,20 @@ module.exports = function (env) {
          }
          callback(ret)
       });
-   }   
+   }
+   self.string.update = function(data, callback) {
+      client.set(data.content.key, data.content.value, function(err, reply) {
+         var ret = {};
+         if (err) {
+            ret.message = err.message;
+         }
+         else {
+            ret.url = '/';
+            ret.message = 'String ' + data.content.key + ' has updated successfully!';
+         }
+         callback(ret)
+      });
+   }      
    self.list.create = function(data, callback) {
       if (Array.isArray(data.content)){
          data.content.forEach(function(element){

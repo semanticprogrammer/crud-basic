@@ -6,6 +6,10 @@
       </header>
       <div class="section">
          <a href = "#create-string" onclick="resource.createForm('/resource/model/create/string')" class="border link button">Create new String(Key-Value)</a>
+         <a href = "#create-list" onclick="resource.createForm('/resource/model/create/list')" class="border link button">Create New List</a>
+         <a href = "#create-set" onclick="resource.createForm('/resource/model/create/set')" class="border link button">Create New Set</a>
+         <a href = "#create-zset" onclick="resource.createForm('/resource/model/create/zset')" class="border link button">Create New Sorted Set</a>
+         <a href = "#create-hash" onclick="resource.createForm('/resource/model/create/hash')" class="border link button">Create New Hash</a>         
       </div>
       <table class="data">
          <caption>Strings</caption>         
@@ -35,7 +39,7 @@
          </tbody>
       </table>
       <table class="data">
-         <caption>Lists</caption>         
+         <caption>Lists</caption>
          <thead>
             <tr>
                <th scope="col">Key</th>
@@ -47,7 +51,7 @@
          <tbody>
             {#lists}
             <tr>
-               <td><a href="#list" onclick="resource.view('/view/list/{key}')">{key}</a></td>
+               <td><a href="#list" onclick="resource.view('/view/elements/list/{key}')">{key}</a></td>
                <td>
                   <a href = "#update" onclick="resource.updateForm('/resource/model/update/key', '{key}')" class="link button">Rename</a>
                </td>
@@ -71,7 +75,7 @@
          <tbody>
             {#sets}
             <tr>
-               <td><a href="#list" onclick="resource.view('/view/set/{key}')">{key}</a></td>
+               <td><a href="#list" onclick="resource.view('/view/elements/set/{key}')">{key}</a></td>
                <td>
                   <a href = "#update" onclick="resource.updateForm('/resource/model/update/key', '{key}')" class="link button">Rename</a>
                </td>
@@ -95,7 +99,7 @@
          <tbody>
             {#zsets}
             <tr>
-               <td><a href="#list" onclick="resource.view('/view/zset/{key}')">{key}</a></td>
+               <td><a href="#list" onclick="resource.view('/view/elements/zset/{key}')">{key}</a></td>
                <td>
                   <a href = "#update" onclick="resource.updateForm('/resource/model/update/key', '{key}')" class="link button">Rename</a>
                </td>
@@ -119,7 +123,7 @@
          <tbody>
             {#hashs}
             <tr>
-               <td><a href="#list" onclick="resource.view('/view/hashs/{key}')">{key}</a></td>
+               <td><a href="#list" onclick="resource.view('/view/elements/hashs/{key}')">{key}</a></td>
                <td>
                   <a href = "#update" onclick="resource.updateForm('/resource/model/update/key', '{key}')" class="link button">Rename</a>
                </td>

@@ -297,7 +297,7 @@ module.exports = function (env) {
          }
       })
    }
-   self.item['delete'] = function(data, callback) {      
+   self.item['delete'] = function(data, callback) {
       client.collection(data.context, function(err, collection) {
          var ret = {};
          if (err) {

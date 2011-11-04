@@ -12,15 +12,27 @@ module.exports = function (env) {
       },
       list: {
          model: {}, 
-         get: {}
+         get: {},
+         element: { 
+            model: {},
+            get: {}
+         }
       },
       set: {
          model: {}, 
-         get: {}
+         get: {},
+         element: { 
+            model: {},
+            get: {}
+         }
       },      
       zset: {
          model: {}, 
-         get: {}
+         get: {},
+         element: { 
+            model: {},
+            get: {}
+         }
       },
       hash: {
          model: {}, 
@@ -186,65 +198,86 @@ module.exports = function (env) {
          }
          callback(ret)
       });
-   }      
-   self.list.create = function(data, callback) {
-      if (Array.isArray(data.content)){
-         data.content.forEach(function(element){
-            multi.lpush(data.context, element)
-         })
-      } else {
-         multi.lpush(data.context, data.content)
-      }
-      multi.exec(function(err, res){
-         var ret = {};
-         if (err) {
-            ret.message = err.message;
-         }
-         else {
-            ret.url = 'view/list/' + data.context;
-            ret.message = 'List ' + data.context + ' has created successfully!';
-         }
-         callback(ret)
-      });
    }
    self.list.length = function(key, callback) {
       client.llen(key, function(err, len) {
          callback(len);
       });
    }
-   self.list.items = function(key, callback) {
-      client.lrange(key, 0, -1, function(err, items) {
+   self.list.elements = function(key, callback) {
+      client.lrange(key, 0, -1, function(err, elements) {
          var ret = {};
          if (err) {
             ret.message = err.message;
          }
          else {
-            ret.data = items;
+            ret.data = elements;
             ret.key = key;
          }
          callback(ret);
       });
    }
-   self.set.items = function(key, callback) {
-      client.smembers(key, function(err, items) {
-         var ret = {};
-         if (err) {
-            ret.message = err.message;
+   self.list.model.create = function() {
+      return {
+         url: '/resource/list',
+         form: {
+            list : {
+               key: '',
+               value: ''
+            }
          }
-         else {
-            ret.data = items;
-            ret.key = key;
+      }
+   }   
+   self.list.get.create = function(query, callback) {
+      var ret = self.list.model.create();
+      callback(ret)
+   }
+   self.list.element.model.create = function() {
+      return {
+         url: '/resource/list/element',
+         form: {
+            list: {
+               key: '',
+               element: {
+                  value: ''
+               }
+            }
          }
-         callback(ret);
-      });
-   }    
-   self.set.create = function(data, callback) {
+      }
+   }
+   self.list.element.get.create = function(query, callback) {
+      var ret = self.list.element.model.create();
+      ret.context = query.context;
+      ret.form.list.key = query.context;
+      callback(ret);
+   }   
+   self.list.element.model.update = function() {
+      return {
+         url: '/resource/list/element',
+         form: {
+            list: {
+               key: '',
+               element: {
+                  value: ''
+               }
+            }
+         }
+      }
+   }
+   self.list.element.get.update = function(query, callback) {
+      var ret = self.list.element.model.update();
+      ret.context = query.context;
+      ret.form.list.key = query.context;
+      ret.form.list.element.value = query.selector;
+      callback(ret);
+   }
+   self.list.create = function(data, callback) {
       if (Array.isArray(data.content)){
          data.content.forEach(function(element){
-            multi.sadd(data.context, element)
+            multi.lpush(data.content.key, element)
          })
       } else {
-         multi.sadd(data.context, data.content)
+         multi.lpush(data.content.key, data.content.value)
       }
       multi.exec(function(err, res){
          var ret = {};
@@ -252,11 +285,255 @@ module.exports = function (env) {
             ret.message = err.message;
          }
          else {
-            ret.url = 'view/set/' + data.context;
-            ret.message = 'Set ' + data.context + ' has created successfully!';
+            ret.url = 'view/elements/list/' + data.content.key;
+            ret.message = 'List ' + data.content.key + ' has created successfully!';
          }
          callback(ret)
       });
    }
+   self.list.element.create = function(data, callback) {
+      client.rpush(data.content.key, data.content.value, function(err, reply) {
+         var ret = {};
+         if (err) {
+            ret.message = err.message;
+            callback(ret);
+         }
+         else {
+            ret.url = '/view/elements/list/' + data.context;
+            ret.message = data.content.value + ' added successfully to ' + data.context;
+            callback(ret);
+         }
+      })
+   }   
+   self.list.element.update = function(data, callback) {
+      client.lset(data.context, data.selector, data.content.value, function(err, reply) {
+         var ret = {};
+         if (err) {
+            ret.message = err.message;
+            callback(ret);
+         }
+         else {
+            ret.url = '/view/elements/list/' + data.context;
+            ret.message = data.selector + ' has changed to ' + data.content.value + ' successfully!';
+            callback(ret);
+         }
+      })
+   }
+   self.list.element['delete'] = function(data, callback) {
+      client.lrem(data.context, 1, data.selector, function(err, reply) {
+         var ret = {};
+         if (err) {
+            ret.message = err.message;
+            callback(ret);
+         }
+         else {
+            ret.message = data.selector + ' of ' + data.context + ' has deleted successfully!';
+            ret.url = 'view/elements/list/' + data.context;
+            callback(ret);
+         }
+      })
+   }
+   self.set.length = function(key, callback) {
+      client.scard(key, function(err, len) {
+         callback(len);
+      });
+   }  
+   self.set.elements = function(key, callback) {
+      client.smembers(key, function(err, elements) {
+         var ret = {};
+         if (err) {
+            ret.message = err.message;
+         }
+         else {
+            ret.data = elements;
+            ret.key = key;
+         }
+         callback(ret);
+      });
+   }
+   self.set.model.create = function() {
+      return {
+         url: '/resource/set',
+         form: {
+            set: {
+               key: '',
+               value: ''
+            }
+         }
+      }
+   }   
+   self.set.get.create = function(query, callback) {
+      var ret = self.set.model.create();
+      callback(ret)
+   }
+   self.set.element.model.create = function() {
+      return {
+         url: '/resource/set/element',
+         form: {
+            set: {
+               key: '',
+               element: {
+                  value: ''
+               }
+            }
+         }
+      }
+   }
+   self.set.element.get.create = function(query, callback) {
+      var ret = self.set.element.model.create();
+      ret.context = query.context;
+      ret.form.set.key = query.context;
+      callback(ret);
+   }
+   self.set.create = function(data, callback) {
+      if (Array.isArray(data.content)){
+         data.content.forEach(function(element){
+            multi.sadd(data.content.key, data.content.value)
+         })
+      } else {
+         multi.sadd(data.content.key, data.content.value)
+      }
+      multi.exec(function(err, res){
+         var ret = {};
+         if (err) {
+            ret.message = err.message;
+         }
+         else {
+            ret.url = 'view/elements/set/' + data.content.key;
+            ret.message = 'Set ' + data.content.key + ' has created successfully!';
+         }
+         callback(ret)
+      });
+   }
+   self.set.element.create = function(data, callback) {
+      client.sadd(data.content.key, data.content.value, function(err, reply) {
+         var ret = {};
+         if (err) {
+            ret.message = err.message;
+            callback(ret);
+         }
+         else {
+            ret.url = '/view/elements/set/' + data.context;
+            ret.message = data.content.value + ' added successfully to ' + data.context;
+            callback(ret);
+         }
+      })
+   }
+   self.set.element['delete'] = function(data, callback) {
+      client.srem(data.context, 1, data.selector, function(err, reply) {
+         var ret = {};
+         if (err) {
+            ret.message = err.message;
+            callback(ret);
+         }
+         else {
+            ret.message = data.selector + ' of ' + data.context + ' has deleted successfully!';
+            ret.url = 'view/elements/set/' + data.context;
+            callback(ret);
+         }
+      })
+   }
+   self.zset.length = function(key, callback) {
+      client.zcard(key, function(err, len) {
+         callback(len);
+      });
+   }  
+   self.zset.elements = function(key, callback) {
+      client.zrange(key, 0, -1, function(err, elements) {
+         var ret = {};
+         if (err) {
+            ret.message = err.message;
+         }
+         else {
+            ret.data = elements;
+            ret.key = key;
+         }
+         callback(ret);
+      });
+   }
+   self.zset.model.create = function() {
+      return {
+         url: '/resource/zset',
+         form: {
+            set: {
+               key: '',
+               score: '',
+               value: ''
+            }
+         }
+      }
+   }   
+   self.zset.get.create = function(query, callback) {
+      var ret = self.zset.model.create();
+      callback(ret)
+   }
+   self.zset.element.model.create = function() {
+      return {
+         url: '/resource/zset/element',
+         form: {
+            zset: {
+               key: '',
+               element: {
+                  score: '',
+                  value: ''
+               }
+            }
+         }
+      }
+   }
+   self.zset.element.get.create = function(query, callback) {
+      var ret = self.zset.element.model.create();
+      ret.context = query.context;
+      ret.form.zset.key = query.context;
+      callback(ret);
+   }
+   self.zset.create = function(data, callback) {
+      if (Array.isArray(data.content)){
+         data.content.forEach(function(element){
+            multi.zadd(data.content.key, data.content.score, data.content.value)
+         })
+      } else {
+         multi.zadd(data.content.key, data.content.score, data.content.value)
+      }
+      multi.exec(function(err, res){
+         var ret = {};
+         if (err) {
+            ret.message = err.message;
+         }
+         else {
+            ret.url = 'view/elements/zset/' + data.content.key;
+            ret.message = 'Sorted Set ' + data.content.key + ' has created successfully!';
+         }
+         callback(ret)
+      });
+   }
+   self.zset.element.create = function(data, callback) {
+      client.zadd(data.content.key, data.content.score, data.content.value, function(err, reply) {
+         var ret = {};
+         if (err) {
+            ret.message = err.message;
+            callback(ret);
+         }
+         else {
+            ret.url = '/view/elements/zset/' + data.context;
+            ret.message = data.content.value + ' added successfully to ' + data.context;
+            callback(ret);
+         }
+      })
+   }
+   self.zset.element['delete'] = function(data, callback) {
+      client.zrem(data.context, 1, data.selector, function(err, reply) {
+         var ret = {};
+         if (err) {
+            ret.message = err.message;
+            callback(ret);
+         }
+         else {
+            ret.message = data.selector + ' of ' + data.context + ' has deleted successfully!';
+            ret.url = 'view/elements/zset/' + data.context;
+            callback(ret);
+         }
+      })
+   }   
    return self;
 }

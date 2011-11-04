@@ -36,6 +36,18 @@ var router_data = [
       });
    }
 },
+{
+   pattern: '/view/elements/{entity}/{name}',
+   get: function(req, res) {
+      resource[req.params.entity].elements(req.params.name, function(data) {
+         data.forEachAttr = templateResource.forEachAttr;
+         res.render(req.params.entity + '-elements', data, function(err, out) {
+            if (err) console.log(err.message)
+            else console.log(out);
+         });
+      })
+   }
+},
 {  // resource list
    pattern: '/view/list/{name}',
    get: function(req, res) {
@@ -74,6 +86,14 @@ var router_data = [
    }
 },
 {
+   pattern: '/resource/model/create/{entity}/element',
+   get: function(req, res) {
+      resource[req.params.entity].element.get.create(req.params.query, function(data) {
+         res.end(JSON.stringify(data));
+      });
+   }
+},
+{
    pattern: '/view/update/{entity}',
    get: function(req, res) {
       resource[req.params.entity].get.update(req.params.query, function(data){
@@ -95,11 +115,28 @@ var router_data = [
       });
    }
 },
+{
+   pattern: '/resource/model/update/{entity}/element',
+   get: function(req, res) {
+      resource[req.params.entity].element.get.update(req.params.query, function(data) {
+         res.end(JSON.stringify(data));
+      });
+   }
+},
 {  // create entity
    pattern: '/resource/{entity}',
    post: function(req, res) {
       var postData = JSON.parse(unescape(req.postdata));
       resource[req.params.entity].create(postData, function(data) {
+         res.end(JSON.stringify(data));
+      })
+   }
+},
+{
+   pattern: '/resource/{entity}/element',
+   post: function(req, res) {
+      var postData = JSON.parse(unescape(req.postdata));
+      resource[req.params.entity].element.create(postData, function(data) {
          res.end(JSON.stringify(data));
       })
    }
@@ -113,11 +150,29 @@ var router_data = [
       })
    }
 },
-{  // delete entity
+{
+   pattern: '/resource/{entity}/element',
+   put: function(req, res) {
+      var postData = JSON.parse(unescape(req.postdata));
+      resource[req.params.entity].element.update(postData, function(data) {
+         res.end(JSON.stringify(data));
+      })
+   }
+},
+{
    pattern: '/resource/{entity}',
    'delete': function(req, res) {
       var postData = JSON.parse(unescape(req.postdata));
       resource[req.params.entity]['delete'](postData, function(data) {
+         res.end(JSON.stringify(data));
+      })
+   }
+},
+{
+   pattern: '/resource/{entity}/element',
+   'delete': function(req, res) {
+      var postData = JSON.parse(unescape(req.postdata));      
+      resource[req.params.entity].element['delete'](postData, function(data) {
          res.end(JSON.stringify(data));
       })
    }

@@ -1,0 +1,32 @@
+<div class="page">
+   <div class="section">
+      <a href = "/" class="border link button">Main</a>
+   </div>
+   <table class="data">
+      <caption>{key}</caption>
+      <thead>
+         <tr>
+            <th scope="col">Value</th>
+            <th scope="col" colspan="2">Action<a href = "#create-element" onclick="resource.createForm('/resource/model/create/hash/element', '{key}')" class="link button" style="float:right">Create</a></th>
+         </tr>
+      </thead>
+      <col id="value"/>
+      <col id="actions"/>
+      <tbody>
+         {#data hash=key}
+         {#forEachAttr}
+         <tr>
+            <td>{key}</td>
+            <td>{value}</td>            
+            <td>
+               <a href='#edit' onclick="resource.updateForm('/resource/model/update/hash/element', '{hash}', {field:'{key}', value:'{value}'})" class="link button">Edit</a>
+            </td>
+            <td>
+               <a href = "#" onclick = "resource['delete']('/resource/hash/element', '{hash}', '{key}')" class="link button">Delete</a>
+            </td>
+         </tr>
+         {/forEachAttr}
+         {/data}
+      </tbody>
+   </table>
+</div>

@@ -1,13 +1,14 @@
 <div class="page">
    <div class="section">
-      <a href = "#create-element" onclick="resource.createForm('/resource/model/create/list/element', '{key}')" class="border link button">Create New Element</a>
+      <a href = "/" class="border link button">Main</a>
    </div>
    <table class="data">
       <caption>{key}</caption>
       <thead>
          <tr>
             <th scope="col">Value</th>
-            <th scope="col" colspan="2">Action</th>
+            <th scope="col" colspan="2">Action<a href = "#create-element" onclick="resource.createForm('/resource/model/create/list/element', '{key}')" class="link button" style="float: right;">Create</a>
+            </th>
          </tr>
       </thead>
       <col id="value"/>

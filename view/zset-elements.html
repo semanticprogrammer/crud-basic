@@ -1,25 +1,31 @@
 <div class="page">
    <div class="section">
-      <a href = "#create-element" onclick="resource.createForm('/resource/model/create/zset/element', '{key}')" class="border link button">Create New Element</a>
+      <a href = "/" class="border link button">Main</a>      
    </div>
    <table class="data">
       <caption>{key}</caption>
       <thead>
          <tr>
             <th scope="col">Value</th>
-            <th scope="col">Action</th>
+            <th scope="col">Score</th>            
+            <th scope="col">Action<a href = "#create-element" onclick="resource.createForm('/resource/model/create/zset/element', '{key}')" class="link button" style="float: right">Create</a>
+</th>
          </tr>
       </thead>
       <col id="value"/>
+      <col id="score"/>
       <col id="actions"/>
       <tbody>
          {#data}
          <tr>
             <td>
-               {.}
+               {value}
             </td>
             <td>
-               <a href = "#" onclick = "resource['delete']('/resource/zset/element', '{key}', '{.}')" class="link button">Delete</a>
+               {score}
+            </td>            
+            <td>
+               <a href = "#" onclick = "resource['delete']('/resource/zset/element', '{key}', '{value}')" class="link button">Delete</a>
             </td>
          </tr>
          {/data}

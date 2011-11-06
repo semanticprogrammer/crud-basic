@@ -36,7 +36,11 @@ module.exports = function (env) {
       },
       hash: {
          model: {}, 
-         get: {}
+         get: {},
+         element: { 
+            model: {},
+            get: {}
+         }         
       }
    };
 
@@ -69,13 +73,22 @@ module.exports = function (env) {
       client.keys('*', function(err, keys) {
          keys.forEach(function (key, pos) {    
             client.type(key, function (err, type) {
-               var item = {
-                  key: key, 
-                  type: type
-               };
-               ret[type + 's'].push(item);
+               ret[type + 's'].push({key: key});
                if (pos === keys.length - 1) {
-                  callback(ret)
+                  if (ret.strings.length > 0) {
+                     ret.strings.forEach(function(element, index, array) {
+                        var it = element;
+                        client.get(it.key, function(err, value) {
+                           element.value = value;
+                           if (index == array.length - 1) {
+                              callback(ret)
+                           }                        
+                        });
+                     });
+                  }
+                  else {
+                     callback(ret)
+                  }
                }
             });
          });
@@ -439,13 +452,24 @@ module.exports = function (env) {
       });
    }  
    self.zset.elements = function(key, callback) {
-      client.zrange(key, 0, -1, function(err, elements) {
-         var ret = {};
+      client.zrange(key, 0, -1, 'withscores', function(err, elements) {
+         var ret = {
+            data: []
+         }, item = {};
          if (err) {
             ret.message = err.message;
          }
          else {
-            ret.data = elements;
+            elements.forEach(function(element) {
+               if (!item.value) {
+                  item.value = element;
+               }
+               else {
+                  item.score = element;
+                  ret.data.push(item);
+                  item = {};
+               }
+            });
             ret.key = key;
          }
          callback(ret);
@@ -534,6 +558,140 @@ module.exports = function (env) {
             callback(ret);
          }
       })
+   }
+   self.hash.length = function(key, callback) {
+      client.hlen(key, function(err, len) {
+         callback(len);
+      });
+   }
+   self.hash.elements = function(key, callback) {
+      client.hgetall(key, function (err, obj) {
+         var ret = {};
+         if (err) {
+            ret.message = err.message;
+         }
+         else {
+            ret.data = obj;
+            ret.key = key;
+         }
+         callback(ret);
+      });
+   }
+   self.hash.model.create = function() {
+      return {
+         url: '/resource/hash',
+         form: {
+            hash : {
+               key: '',
+               json: {}
+            }
+         }
+      }
+   }  
+   self.hash.get.create = function(query, callback) {
+      var ret = self.hash.model.create();
+      callback(ret)
+   }
+   self.hash.element.model.create = function() {
+      return {
+         url: '/resource/hash/element',
+         form: {
+            hash: {
+               key: '',
+               element: {
+                  field: '',
+                  value: ''
+               }
+            }
+         }
+      }
+   }
+   self.hash.element.get.create = function(query, callback) {
+      var ret = self.hash.element.model.create();
+      ret.context = query.context;
+      ret.form.hash.key = query.context;
+      callback(ret);
    }   
+   self.hash.element.model.update = function() {
+      return {
+         url: '/resource/hash/element',
+         form: {
+            hash: {
+               key: '',
+               element: {
+                  field: '',
+                  value: ''
+               }
+            }
+         }
+      }
+   }
+   self.hash.element.get.update = function(query, callback) {
+      var ret = self.hash.element.model.update();
+      ret.context = query.context;
+      ret.form.hash.key = query.context;
+      query.selector = JSON.parse(query.selector);
+      ret.form.hash.element.field = query.selector.field;
+      ret.form.hash.element.value = query.selector.value;
+      callback(ret);
+   }
+   self.hash.create = function(data, callback) {
+      if (data.content.json) {
+         data.content.value = JSON.parse(data.content.json);
+      }
+      client.hmset(data.content.key, data.content.value, function(err, res){
+         var ret = {};
+         if (err) {
+            ret.message = err.message;
+         }
+         else {
+            ret.url = 'view/elements/hash/' + data.content.key;
+            ret.message = 'Hash ' + data.content.key + ' has created successfully!';
+         }
+         callback(ret)
+      });
+   }
+   self.hash.element.create = function(data, callback) {
+      client.hset(data.context, data.content.field, data.content.value, function(err, reply) {
+         var ret = {};
+         if (err) {
+            ret.message = err.message;
+            callback(ret);
+         }
+         else {
+            ret.url = '/view/elements/hash/' + data.context;
+            ret.message = data.content.field + ' added successfully to ' + data.context;
+            callback(ret);
+         }
+      })
+   }   
+   self.hash.element.update = function(data, callback) {
+      client.hset(data.context, data.content.field, data.content.value, function(err, reply) {
+         var ret = {};
+         if (err) {
+            ret.message = err.message;
+            callback(ret);
+         }
+         else {
+            ret.url = '/view/elements/hash/' + data.context;
+            ret.message = data.content.field + ' has changed to ' + data.content.value + ' successfully!';
+            callback(ret);
+         }
+      })
+   }
+   self.hash.element['delete'] = function(data, callback) {
+      client.hdel(data.context, data.selector, function(err, reply) {
+         var ret = {};
+         if (err) {
+            ret.message = err.message;
+            callback(ret);
+         }
+         else {
+            ret.message = data.selector + ' of ' + data.context + ' has deleted successfully!';
+            ret.url = 'view/elements/hash/' + data.context;
+            callback(ret);
+         }
+      })
+   }
    return self;
 }

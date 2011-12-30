@@ -2,14 +2,18 @@ module.exports = function (env) {
    var 
    util = require('util'),
    self = { 
-      database: {},
+      database: {
+         model: {},
+         get: {}         
+      },
       document: {
-         model: {}, 
+         model: {},
          get: {}
       }
-   }   
+   }
    var cradle = require('cradle');
-   var db = new(cradle.Connection)(env.host, env.port).database(env.db);
+   var client = new(cradle.Connection)(env.host, env.port);
+   var db = client.database(env.db);
    self.open = function(callback) {
       callback();
    }
@@ -22,13 +26,46 @@ module.exports = function (env) {
    self.database.info = function(callback) {
       var ret = {};
       ret.dbName = db.name;
-      ret.entities = [];
-      db.all(function(err, res){
-         ret.entities = res.rows.map(function (row) {
-            return {id: row.id, value: JSON.stringify(row.value)}
-         });
-         callback(ret);
-      })
+      ret.entities = [];      
+      db.exists(function (err, exists) {
+         if (exists) {
+            db.all(function(err, res) {
+               ret.entities = res.rows.map(function (row) {
+                  return {
+                     id: row.id, 
+                     value: JSON.stringify(row.value)
+                  }
+               });            
+               callback(ret);
+            })
+         } else {
+            console.log(db.name + ' database does not exists.');
+            db.create();
+            callback(ret);
+         }
+      });
+   }
+   self.database.model.create = function() {
+      return {
+         url: '/resource/database',
+         form: {
+            database: {
+               name: ''
+            }
+         }
+      }
+   }
+   self.database.get.create = function(query, callback) {
+      var ret = self.database.model.create();
+      callback(ret)
+   }
+   self.database.create = function(data, callback) {
+      var ret = {};
+      var db1 = client.database(data.content.name);
+      db1.create();
+      ret.url = '/';
+      ret.message = 'Database ' + db1.name + ' has created successfully!';
+      callback(ret);
    }
    self.document.get = function(data, callback) {
       db.get(data.selector, function(err, doc) {

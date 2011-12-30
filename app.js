@@ -1,5 +1,5 @@
 var 
-fs = require('fs'),
+path = require('path'),
 qs = require('querystring'),
 connect = require('connect'),
 router = require('mutant/lib/router').router,
@@ -11,7 +11,8 @@ var env = require('./config/environment.json', 'utf-8');
 var db_env = require('./config/' + env.resource.db + '.json', 'utf-8');
 
 var resource = require('./resource/' + env.resource.db)(db_env);
-var templateResource = require('./resource/' + env.resource.template)();
+var templatePath = path.join(__dirname, env.view.area);
+var templateResource = require('./resource/' + env.view.engine)({path: templatePath, ext: env.view.ext});
 
 var router_data = [
 {
@@ -24,14 +25,13 @@ var router_data = [
             res.end(output);
          });
       };
-      next();         
+      next();
    }
 },
 {
    pattern: '/view/db',
    get: function(req, res) {
       resource.database.info(function(data) {
-         data.forEachAttr = templateResource.forEachAttr;
          res.render(env.resource.db, data);
       });
    }
@@ -51,30 +51,35 @@ var router_data = [
 {  // resource list
    pattern: '/view/list/{name}',
    get: function(req, res) {
+      var templateName = req.params.name + '-list';
       resource.list(req.params.name, function(data) {
-         templateResource.onLoad(function(name, callback) {
-            data.forEachAttr = templateResource.forEachAttr;
-            res.render('list', data);
-         });
-         res.render(req.params.name + '-list', data, function(err, out) {
-            if (err) console.log(err.message)
-            else console.log(out);
-         });
+         templateResource.templateExists(templateName, function(exists) {
+            if (!exists) {
+               templateName = 'list';
+            }
+            res.render(templateName, data, function(err, out) {
+               if (err) console.log(err.message)
+               else console.log(out);
+            })
+         })
       })
    }
 },
 {
    pattern: '/view/create/{entity}',
    get: function(req, res) {
-      resource[req.params.entity].get.create(req.params.query, function(data){
-         templateResource.onLoad(function(name, callback) {
-            res.render('create', data);
-         });
-         res.render(req.params.query.context + '-create', data, function(err, out) {
-            if (err) console.log(err.message)
-            else console.log(out);
-         });
-      });
+      var templateName = req.params.query.context + '-create';
+      resource[req.params.entity].get.create(req.params.query, function(data) {
+         templateResource.templateExists(templateName, function(exists) {
+            if (!exists) {
+               templateName = 'create';
+            }
+            res.render(templateName, data, function(err, out) {
+               if (err) console.log(err.message)
+               else console.log(out);
+            })
+         })
+      })
    }
 },
 {
@@ -96,15 +101,18 @@ var router_data = [
 {
    pattern: '/view/update/{entity}',
    get: function(req, res) {
-      resource[req.params.entity].get.update(req.params.query, function(data){
-         templateResource.onLoad(function(name, callback) {
-            res.render('update', data);
-         });
-         res.render(req.params.query.context + '-update', data, function(err, out) {
-            if (err) console.log(err.message)
-            else console.log(out);
-         });
-      });
+      var templateName = req.params.query.context + '-update';
+      resource[req.params.entity].get.update(req.params.query, function(data) {
+         templateResource.templateExists(templateName, function(exists) {
+            if (!exists) {
+               templateName = 'update';
+            }
+            res.render(templateName, data, function(err, out) {
+               if (err) console.log(err.message)
+               else console.log(out);
+            })
+         })
+      })
    }
 },
 {
@@ -193,7 +201,7 @@ function start(callback) {
    router = router(router_data);
    env.app.handler = handler(router);
    resource.open(function(err, db) {
-      templateResource.prepareTemplates(__dirname + "/" + env.view.area, env.view.ext, callback);
+      callback();
    });   
 }
 

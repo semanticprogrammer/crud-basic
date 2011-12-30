@@ -65,6 +65,7 @@ module.exports = function (env) {
    }
    self.database.info = function(callback) {
       var ret = {};
+      ret.dbName = '';
       ret.strings = [];
       ret.lists = [];
       ret.sets = [];

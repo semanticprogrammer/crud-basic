@@ -1,18 +1,18 @@
 {
    "app": {
       "hostname": "localhost", 
-      "port": "3000"
+      "port": "3001"
    },
    "static": {
       "area": "public"
    },
    "view": {
       "area": "view",
-      "ext": ".html"
+      "engine": "ejs",
+      "ext": ".ejs"
    },
    "resource": {
-      "template": "dust",
-      "db": "redis",
+      "db": "mongodb",
       "view-point": "#view"
    }
 }

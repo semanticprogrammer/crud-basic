@@ -1,0 +1,34 @@
+<div class="page">
+   <div class="section">
+      <a href = "/" class="border link button">Main</a>
+   </div>
+   <table class="data">
+      <caption><%= key %></caption>
+      <thead>
+         <tr>
+            <th scope="col">Value</th>
+            <th scope="col">Score</th>
+            <th scope="col">Action<a href = "#create-element" onclick="resource.createForm('/resource/model/create/zset/element', '<%= key %>')" class="link button" style="float: right">Create</a>
+</th>
+         </tr>
+      </thead>
+      <col id="value"/>
+      <col id="score"/>
+      <col id="actions"/>
+      <tbody>
+<% data.forEach(function(element){ %>
+         <tr>
+            <td>
+               <%= element.value %>
+            </td>
+            <td>
+               <%= element.score %>
+            </td>            
+            <td>
+               <a href = "#" onclick = "resource['delete']('/resource/zset/element', '<%= key %>', '<%= element.value %>')" class="link button">Delete</a>
+            </td>
+         </tr>
+<% }) %>
+      </tbody>
+   </table>
+</div>

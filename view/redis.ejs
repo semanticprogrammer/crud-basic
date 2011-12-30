@@ -1,0 +1,149 @@
+<div class="page">
+   <form>
+      <header class="section center">
+         <label class="inline">Database:</label>
+         <h2 class="inline"><%= dbName %></h2>
+      </header>
+      <table class="data">
+         <caption>Strings</caption>
+         <thead>
+            <tr>
+               <th scope="col">Key</th>
+               <th scope="col">Value</th>
+               <th scope="col" colspan="3">Action<a href = "#create-string" onclick="resource.createForm('/resource/model/create/string')" class="float-right link button">Create</a>
+               </th>
+            </tr>
+         </thead>
+         <col id="entity-name"/>
+         <col id="actions"/>
+         <tbody>
+<% strings.forEach(function(element){ %>
+            <tr>
+               <td><%= element.key %></td>
+               <td><%= element.value %></td>
+               <td>
+                  <a href = "#rename" onclick="resource.updateForm('/resource/model/update/key', '<%= element.key %>')" class="link button">Rename</a>
+               </td>
+               <td>
+                  <a href='#edit' onclick="resource.updateForm('/resource/model/update/string', '<%= element.key %>', '<%= element.key %>')" class="link button">Edit</a>
+               </td>
+               <td>
+                  <a href = "#" onclick = "resource['delete']('/resource/key', '<%= element.key %>')" class="link button">Delete</a>
+               </td>
+            </tr>
+<% }) %>
+         </tbody>
+      </table>
+      <table class="data">
+         <caption>Lists</caption>
+         <thead>
+            <tr>
+               <th scope="col">Key</th>
+               <th scope="col" colspan="3">Action<a href = "#create-list" onclick="resource.createForm('/resource/model/create/list')" class="float-right link button">Create</a>
+               </th>
+            </tr>
+         </thead>
+         <col id="entity-name"/>
+         <col id="actions"/>
+         <tbody>
+<% lists.forEach(function(element){ %>
+            <tr>
+               <td><%= element.key %></td>
+               <td>
+                  <a href = "#rename" onclick="resource.updateForm('/resource/model/update/key', '<%= element.key %>')" class="link button">Rename</a>
+               </td>
+               <td>
+                  <a href='#edit' onclick="resource.view('/view/elements/list/<%= element.key %>')" class="link button">Edit</a>
+               </td>
+               <td>
+                  <a href = "#" onclick = "resource['delete']('/resource/key', '<%= element.key %>')" class="link button">Delete</a>
+               </td>
+            </tr>
+<% }) %>
+         </tbody>
+      </table>
+      <table class="data">
+         <caption>Sets</caption>         
+         <thead>
+            <tr>
+               <th scope="col">Key</th>
+               <th scope="col" colspan="3">Action<a href = "#create-set" onclick="resource.createForm('/resource/model/create/set')" class="float-right link button">Create</a>
+               </th>
+            </tr>
+         </thead>
+         <col id="entity-name"/>
+         <col id="actions"/>
+         <tbody>
+<% sets.forEach(function(element) { %>
+            <tr>
+               <td><%= element.key %></td>
+               <td>
+                  <a href = "#rename" onclick="resource.updateForm('/resource/model/update/key', '<%= element.key %>')" class="link button">Rename</a>
+               </td>
+               <td>
+                  <a href='#edit' onclick="resource.view('/view/elements/set/<%= element.key %>')" class="link button">Edit</a>
+               </td>
+               <td>
+                  <a href = "#" onclick = "resource['delete']('/resource/key', '<%= element.key %>')" class="link button">Delete</a>
+               </td>
+            </tr>
+<% }) %>
+         </tbody>
+      </table>
+      <table class="data">
+         <caption>Sorted Sets</caption>
+         <thead>
+            <tr>
+               <th scope="col">Key</th>
+               <th scope="col" colspan="3">Action<a href = "#create-zset" onclick="resource.createForm('/resource/model/create/zset')" class="float-right link button">Create</a>
+               </th>
+            </tr>
+         </thead>
+         <col id="entity-name"/>
+         <col id="actions"/>
+         <tbody>
+<% zsets.forEach(function(element) { %>
+            <tr>
+               <td><%= element.key %></td>
+               <td>
+                  <a href = "#rename" onclick="resource.updateForm('/resource/model/update/key', '<%= element.key %>')" class="link button">Rename</a>
+               </td>
+               <td>
+                  <a href='#edit' onclick="resource.view('/view/elements/zset/<%= element.key %>')" class="link button">Edit</a>
+               </td>
+               <td>
+                  <a href = "#" onclick = "resource['delete']('/resource/key', '<%= element.key %>')" class="link button">Delete</a>
+               </td>
+            </tr>
+<% }) %>
+         </tbody>
+      </table>
+      <table class="data">
+         <caption>Hashs</caption>
+         <thead>
+            <tr>
+               <th scope="col">Key</th>
+               <th scope="col" colspan="3">Action<a href = "#create-hash" onclick="resource.createForm('/resource/model/create/hash')" class="float-right link button">Create</a></th>
+            </tr>
+         </thead>
+         <col id="entity-name"/>
+         <col id="actions"/>
+         <tbody>
+<% hashs.forEach(function(element) { %>
+            <tr>
+               <td><%= element.key %></td>
+               <td>
+                  <a href = "#rename" onclick="resource.updateForm('/resource/model/update/key', '<%= element.key %>')" class="link button">Rename</a>
+               </td>
+               <td>
+                  <a href='#edit' onclick="resource.view('/view/elements/hash/<%= element.key %>')" class="link button">Edit</a>
+               </td>
+               <td>
+                  <a href = "#" onclick = "resource['delete']('/resource/key', '<%= element.key %>')" class="link button">Delete</a>
+               </td>
+            </tr>
+<% }) %>
+         </tbody>
+      </table>
+   </form>
+</div>

@@ -1,0 +1,41 @@
+<div class="page">
+   <form>
+      <header class="section center">
+         <label class="inline">Database:</label>
+         <h2 class="inline"><%= dbName %></h2>
+      </header>
+      <div class="section">
+         <a href = "#create" onclick="resource.createForm('/resource/model/create/table')" class="border link button">Create new table</a>
+      </div>
+      <table class="data">
+         <thead>
+            <tr>
+               <th scope="col">Table</th>
+               <th scope="col" colspan="2">Action</th>
+            </tr>
+         </thead>
+         <col id="entity-name"/>
+         <col id="actions"/>
+         <tbody>
+            <tr>
+               <td><a href="#list" onclick="resource.view('/view/list/post')">To work with post table we already have corresponding templates</a></td>
+               <td>
+               </td>
+               <td>
+               </td>
+            </tr>
+<% entityNames.forEach(function(name){ %>
+            <tr>
+               <td><a href="#list" onclick="resource.view('/view/list/<%= name %>')"><%= name %></a></td>
+               <td>
+                  <a href = "#update" onclick="resource.updateForm('/resource/model/update/table', '<%= name %>')" class="link button">Edit</a>
+               </td>
+               <td>
+                  <a href = "#" onclick = "resource['delete']('/resource/table', '<%= name %>')" class="link button">Delete</a>
+               </td>
+            </tr>
+<% }) %>
+         </tbody>
+      </table>
+   </form>
+</div>

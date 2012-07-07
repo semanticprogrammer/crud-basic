@@ -15,7 +15,7 @@ module.exports = function (env) {
       var templatePath = path.join(env.path, templateName + env.ext);
       var str = cache[templatePath];
       if (str) return callback(true);
-      path.exists(templatePath, function(exists) {
+      fs.exists(templatePath, function(exists) {
          callback(exists);
       })
    }

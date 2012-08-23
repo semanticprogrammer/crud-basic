@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/semanticprogrammer/crud-basic.png)](http://travis-ci.org/semanticprogrammer/crud-basic)
 # CRUD-Basic
 CRUD-Basic show the way to implement CRUD functionality with different kind of databases without help from MVC pattern.
 
